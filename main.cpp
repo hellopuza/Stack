@@ -6,7 +6,7 @@
     * Author:      Artem Puzankov                                              *
     * Email:       puzankov.ao@phystech.edu                                    *
 *///----------------------------------------------------------------------------
-// 968 lines
+// 972 lines
 
 #define _CRT_SECURE_NO_WARNINGS
 
@@ -48,3 +48,4 @@ int main()
 
     return 0;
 }
+

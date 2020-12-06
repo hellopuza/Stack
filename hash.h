@@ -22,7 +22,7 @@ typedef unsigned long long hash_t;
 
 #define HASH_SIZE sizeof(hash_t)
 #define MAX_HASH  ULLONG_MAX
-#define HASH_PRINT_FORMAT "%p"
+#define HASH_PRINT_FORMAT "%p%p"
 
 static const size_t block_size = 64;
 static const size_t keys_num   = 16;
@@ -51,7 +51,7 @@ void bit_rotate(void* buf, size_t size, int dir);
  *  @param   buf  Start of memory to be hashable
  *  @param   size Size of memory to be hashable
  *
- *  @return  Hash
+ *  @return  hash
  */
 
 hash_t hash(void* buf, size_t size);
@@ -59,3 +59,4 @@ hash_t hash(void* buf, size_t size);
 //------------------------------------------------------------------------------
 
 #endif // HASH_H_INCLUDED
+

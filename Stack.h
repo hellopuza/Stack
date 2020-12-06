@@ -131,6 +131,16 @@ TYPE TEMPLATE(StackPop, TYPE) (TEMPLATE(stack, TYPE)* p_stk);
 void TEMPLATE(StackPoison, TYPE) (TEMPLATE(stack, TYPE)* p_stk);
 
 //------------------------------------------------------------------------------
+/*! @brief   Check if value is POISON
+ *
+ *  @param   value       Checked value
+ *
+ *  @return 1 if value is POISON, else 0
+ */
+
+int TEMPLATE(isPOISON, TYPE) (TYPE value);
+
+//------------------------------------------------------------------------------
 /*! @brief   Increase the stack by 2 times
  *
  *  @param   p_stk       Pointer to stack
@@ -153,7 +163,7 @@ error_t TEMPLATE(StackExpand, TYPE) (TEMPLATE(stack, TYPE)* p_stk);
 error_t TEMPLATE(StackDump, TYPE) (TEMPLATE(stack, TYPE)* p_stk, const char* funcname = "@some function@", const char* logfile = logname);
 
 //------------------------------------------------------------------------------
-/*! @brief   Ñheck stack for problems, canaries, hash (if enabled)
+/*! @brief   Check stack for problems, canaries, hash (if enabled)
  *
  *  @param   p_stk       Pointer to stack
  *  @param   funcname    Name of the function from which the StackCheck was called
@@ -216,3 +226,4 @@ int TEMPLATE(CanaryCheck, TYPE) (TEMPLATE(stack, TYPE)* p_stk);
 #endif // CANARY_PROTECT
 
 //------------------------------------------------------------------------------
+

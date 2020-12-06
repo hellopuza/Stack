@@ -193,6 +193,18 @@ void TEMPLATE(StackPoison, TYPE) (TEMPLATE(stack, TYPE)* p_stk)
 
 //------------------------------------------------------------------------------
 
+int TEMPLATE(isPOISON, TYPE) (TYPE value)
+{
+    if (isnan(TEMPLATE(TYPE, POISON)))
+        if (isnan(value))
+            return 1;
+        else
+            return 0;
+    return (value == TEMPLATE(TYPE, POISON));
+}
+
+//------------------------------------------------------------------------------
+
 error_t TEMPLATE(StackExpand, TYPE) (TEMPLATE(stack, TYPE)* p_stk)
 {
     ASSERTOK(p_stk);
@@ -297,7 +309,7 @@ error_t TEMPLATE(StackDump, TYPE) (TEMPLATE(stack, TYPE)* p_stk, const char* fun
 
         for (int i = 0; i < p_stk->capacity; i++)
         {
-            if (i < p_stk->size_cur)
+            if (!(TEMPLATE(isPOISON, TYPE) (p_stk->data[i])))
                 fprintf(fp, "\t\t*[%d]: " TEMPLATE(TYPE, PRINT_FORMAT) "\n",          i, p_stk->data[i]);
             else
                 fprintf(fp, "\t\t [%d]: " TEMPLATE(TYPE, PRINT_FORMAT) " (POISON)\n", i, p_stk->data[i]);
@@ -356,6 +368,12 @@ error_t TEMPLATE(StackCheck, TYPE) (TEMPLATE(stack, TYPE)* p_stk, const char* fu
     {
         p_stk->errCode = CAPACITY_WRONG_VALUE;
         return CAPACITY_WRONG_VALUE;
+    }
+
+    if (! (TEMPLATE(isPOISON, TYPE) (p_stk->data[p_stk->size_cur])))
+    {
+        p_stk->errCode = WRONG_CUR_SIZE;
+        return WRONG_CUR_SIZE;
     }
 
 #ifdef CANARY_PROTECT
@@ -447,3 +465,4 @@ int TEMPLATE(CanaryCheck, TYPE) (TEMPLATE(stack, TYPE)* p_stk)
 }
 
 //------------------------------------------------------------------------------
+
