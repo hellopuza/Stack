@@ -270,7 +270,7 @@ error_t TEMPLATE(StackDump, TYPE) (TEMPLATE(stack, TYPE)* p_stk, const char* fun
 
         fprintf(fp, "\tType of data is %s\n", TEMPLATE(TYPE, PRINT_TYPE));
         fprintf(fp, "\tCapacity           = %d\n",   p_stk->capacity);
-        fprintf(fp, "\tÑurrent size       = %d\n\n", p_stk->size_cur);
+        fprintf(fp, "\tCurrent size       = %d\n\n", p_stk->size_cur);
 
 #ifdef CANARY_PROTECT
         fprintf(fp, "\tCanary stack 1     = " CAN_PRINT_FORMAT "\n",   p_stk->canary1);
