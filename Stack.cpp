@@ -358,6 +358,14 @@ error_t TEMPLATE(StackCheck, TYPE) (TEMPLATE(stack, TYPE)* p_stk, const char* fu
         return CAPACITY_WRONG_VALUE;
     }
 
+#ifdef CANARY_PROTECT
+    if (TEMPLATE(CanaryCheck, TYPE) (p_stk))
+    {
+        p_stk->errCode = CANARY_DIED;
+        return CANARY_DIED;
+    }
+#endif // CANARY_PROTECT
+
 #ifdef HASH_PROTECT
     if (   (p_stk->stackhash[0] != hash(p_stk, sizeof(struct Stack)))
         || (p_stk->datahash[0]  != hash(p_stk->data, p_stk->capacity * sizeof(TYPE))) )
@@ -366,14 +374,6 @@ error_t TEMPLATE(StackCheck, TYPE) (TEMPLATE(stack, TYPE)* p_stk, const char* fu
         return INCORRECT_HASH;
     }
 #endif // HASH_PROTECT
-
-#ifdef CANARY_PROTECT
-    if (TEMPLATE(CanaryCheck, TYPE) (p_stk))
-    {
-        p_stk->errCode = CANARY_DIED;
-        return CANARY_DIED;
-    }
-#endif // CANARY_PROTECT
 
     else
     {

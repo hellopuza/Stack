@@ -22,6 +22,7 @@ void bit_rotate(void* buf, size_t size, int dir)
 
     if (dir > 0)
     {
+        dir = dir % (size * 8);
         for (int i = 0; i < dir; ++i)
         {
             for (int byte_i = 0; byte_i < size; ++byte_i)
@@ -47,7 +48,7 @@ void bit_rotate(void* buf, size_t size, int dir)
     }
     else
     {
-        dir = -dir;
+        dir = -dir % (size * 8);
 
         for (int i = 0; i < dir; ++i)
         {
@@ -105,8 +106,8 @@ hash_t hash(void* buf, size_t size)
             char p1 = b1;
             char p2 = b2;
 
-            bit_rotate(&p1, 1, -(byte_i % 8));
-            bit_rotate(&p2, 1, (bm_size / 2 - byte_i) % 8);
+            bit_rotate(&p1, 1, -byte_i);
+            bit_rotate(&p2, 1, bm_size / 2 - byte_i);
 
             char q1 = b2 ^ p1 ^ Keys[ byte_i      % keys_num] + b1;
             char q2 = b1 ^ p2 ^ Keys[(byte_i + 1) % keys_num] + b2;

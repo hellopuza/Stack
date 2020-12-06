@@ -10,7 +10,9 @@
 
 #define _CRT_SECURE_NO_WARNINGS
 
+#define TYPE double
 #include "Stack.h"
+#undef TYPE
 
 int main()
 {
@@ -36,6 +38,14 @@ int main()
     StackPop_double(&stk);
 
     StackDestruct_double(&stk);
+
+
+    printf("    /|    /|    /|\n"
+           "   //|   //|   //|\n"
+           "  //-|  //-|  //-|\n"
+           " // 0| // 0| // 0|\n"
+           "//===|//===|//===|\n"
+           "| STACK IS GOOD! |\n");
 
 
     return 0;
