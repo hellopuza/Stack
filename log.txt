@@ -1,0 +1,425 @@
+this dump was called from a function _StackConstruct_double
+TIME: 2020-12-06 03:05:11.033
+Stack (OK) [0x000000F2C76FF8C0] "stk"
+	{
+	Type of data is double
+	Capacity           = 8
+	Ñurrent size       = 0
+
+	Canary stack 1     = 62436
+	Canary stack 2     = 62436
+
+	Stack hash         = 0xD3E8374FECBF35C4
+	Data hash          = 0x84A6016644F4A3AE
+
+	Data [0x0000025798E45D48]
+		{
+		Canary data 1: 62436
+		 [0]: -nan(ind) (POISON)
+		 [1]: -nan(ind) (POISON)
+		 [2]: -nan(ind) (POISON)
+		 [3]: -nan(ind) (POISON)
+		 [4]: -nan(ind) (POISON)
+		 [5]: -nan(ind) (POISON)
+		 [6]: -nan(ind) (POISON)
+		 [7]: -nan(ind) (POISON)
+		Canary data 2: 62436
+		}
+	}
+********************************************************************************
+this dump was called from a function StackPush_double
+TIME: 2020-12-06 03:05:11.034
+Stack (OK) [0x000000F2C76FF8C0] "stk"
+	{
+	Type of data is double
+	Capacity           = 8
+	Ñurrent size       = 1
+
+	Canary stack 1     = 124872
+	Canary stack 2     = 124872
+
+	Stack hash         = 0x37C97A3A01061BEA
+	Data hash          = 0x475BC0A02A03DE49
+
+	Data [0x0000025798E45D48]
+		{
+		Canary data 1: 124872
+		*[0]: 10.100000
+		 [1]: -nan(ind) (POISON)
+		 [2]: -nan(ind) (POISON)
+		 [3]: -nan(ind) (POISON)
+		 [4]: -nan(ind) (POISON)
+		 [5]: -nan(ind) (POISON)
+		 [6]: -nan(ind) (POISON)
+		 [7]: -nan(ind) (POISON)
+		Canary data 2: 124872
+		}
+	}
+********************************************************************************
+this dump was called from a function StackPush_double
+TIME: 2020-12-06 03:05:11.035
+Stack (OK) [0x000000F2C76FF8C0] "stk"
+	{
+	Type of data is double
+	Capacity           = 8
+	Ñurrent size       = 2
+
+	Canary stack 1     = 238057
+	Canary stack 2     = 238057
+
+	Stack hash         = 0x0F08E1A2F9A5F6F4
+	Data hash          = 0xD5E602A3EFA778DF
+
+	Data [0x0000025798E45D48]
+		{
+		Canary data 1: 238057
+		*[0]: 10.100000
+		*[1]: -12.200000
+		 [2]: -nan(ind) (POISON)
+		 [3]: -nan(ind) (POISON)
+		 [4]: -nan(ind) (POISON)
+		 [5]: -nan(ind) (POISON)
+		 [6]: -nan(ind) (POISON)
+		 [7]: -nan(ind) (POISON)
+		Canary data 2: 238057
+		}
+	}
+********************************************************************************
+this dump was called from a function StackPush_double
+TIME: 2020-12-06 03:05:11.036
+Stack (OK) [0x000000F2C76FF8C0] "stk"
+	{
+	Type of data is double
+	Capacity           = 8
+	Ñurrent size       = 3
+
+	Canary stack 1     = 453805
+	Canary stack 2     = 453805
+
+	Stack hash         = 0x8B0C86A5F2340254
+	Data hash          = 0x8442DE7C13860837
+
+	Data [0x0000025798E45D48]
+		{
+		Canary data 1: 453805
+		*[0]: 10.100000
+		*[1]: -12.200000
+		*[2]: 0.112255
+		 [3]: -nan(ind) (POISON)
+		 [4]: -nan(ind) (POISON)
+		 [5]: -nan(ind) (POISON)
+		 [6]: -nan(ind) (POISON)
+		 [7]: -nan(ind) (POISON)
+		Canary data 2: 453805
+		}
+	}
+********************************************************************************
+this dump was called from a function StackPush_double
+TIME: 2020-12-06 03:05:11.037
+Stack (OK) [0x000000F2C76FF8C0] "stk"
+	{
+	Type of data is double
+	Capacity           = 8
+	Ñurrent size       = 4
+
+	Canary stack 1     = 888609
+	Canary stack 2     = 888609
+
+	Stack hash         = 0x5FD339E91042C8AA
+	Data hash          = 0xEF4DFE9E72FC1795
+
+	Data [0x0000025798E45D48]
+		{
+		Canary data 1: 888609
+		*[0]: 10.100000
+		*[1]: -12.200000
+		*[2]: 0.112255
+		*[3]: -0.400000
+		 [4]: -nan(ind) (POISON)
+		 [5]: -nan(ind) (POISON)
+		 [6]: -nan(ind) (POISON)
+		 [7]: -nan(ind) (POISON)
+		Canary data 2: 888609
+		}
+	}
+********************************************************************************
+this dump was called from a function StackPush_double
+TIME: 2020-12-06 03:05:11.038
+Stack (OK) [0x000000F2C76FF8C0] "stk"
+	{
+	Type of data is double
+	Capacity           = 8
+	Ñurrent size       = 5
+
+	Canary stack 1     = 1777218
+	Canary stack 2     = 1777218
+
+	Stack hash         = 0x63EB75A879F003CA
+	Data hash          = 0xEB44D3B98F0419DD
+
+	Data [0x0000025798E45D48]
+		{
+		Canary data 1: 1777218
+		*[0]: 10.100000
+		*[1]: -12.200000
+		*[2]: 0.112255
+		*[3]: -0.400000
+		*[4]: 12.000000
+		 [5]: -nan(ind) (POISON)
+		 [6]: -nan(ind) (POISON)
+		 [7]: -nan(ind) (POISON)
+		Canary data 2: 1777218
+		}
+	}
+********************************************************************************
+this dump was called from a function StackPush_double
+TIME: 2020-12-06 03:05:11.039
+Stack (OK) [0x000000F2C76FF8C0] "stk"
+	{
+	Type of data is double
+	Capacity           = 8
+	Ñurrent size       = 6
+
+	Canary stack 1     = 3531602
+	Canary stack 2     = 3531602
+
+	Stack hash         = 0xD844DD445559A765
+	Data hash          = 0x6257692B7B23BD63
+
+	Data [0x0000025798E45D48]
+		{
+		Canary data 1: 3531602
+		*[0]: 10.100000
+		*[1]: -12.200000
+		*[2]: 0.112255
+		*[3]: -0.400000
+		*[4]: 12.000000
+		*[5]: 10.300000
+		 [6]: -nan(ind) (POISON)
+		 [7]: -nan(ind) (POISON)
+		Canary data 2: 3531602
+		}
+	}
+********************************************************************************
+this dump was called from a function StackPush_double
+TIME: 2020-12-06 03:05:11.041
+Stack (OK) [0x000000F2C76FF8C0] "stk"
+	{
+	Type of data is double
+	Capacity           = 8
+	Ñurrent size       = 7
+
+	Canary stack 1     = 7092170
+	Canary stack 2     = 7092170
+
+	Stack hash         = 0x11AD2D1144379608
+	Data hash          = 0xDEF99C1D6E6F21BB
+
+	Data [0x0000025798E45D48]
+		{
+		Canary data 1: 7092170
+		*[0]: 10.100000
+		*[1]: -12.200000
+		*[2]: 0.112255
+		*[3]: -0.400000
+		*[4]: 12.000000
+		*[5]: 10.300000
+		*[6]: -12.250000
+		 [7]: -nan(ind) (POISON)
+		Canary data 2: 7092170
+		}
+	}
+********************************************************************************
+this dump was called from a function StackPush_double
+TIME: 2020-12-06 03:05:11.043
+Stack (OK) [0x000000F2C76FF8C0] "stk"
+	{
+	Type of data is double
+	Capacity           = 16
+	Ñurrent size       = 8
+
+	Canary stack 1     = 14153216
+	Canary stack 2     = 14153216
+
+	Stack hash         = 0x008B7EFBFE15C036
+	Data hash          = 0x42955DA827730E1F
+
+	Data [0x0000025798E50448]
+		{
+		Canary data 1: 14153216
+		*[0]: 10.100000
+		*[1]: -12.200000
+		*[2]: 0.112255
+		*[3]: -0.400000
+		*[4]: 12.000000
+		*[5]: 10.300000
+		*[6]: -12.250000
+		*[7]: 11.110000
+		 [8]: -nan(ind) (POISON)
+		 [9]: -nan(ind) (POISON)
+		 [10]: -nan(ind) (POISON)
+		 [11]: -nan(ind) (POISON)
+		 [12]: -nan(ind) (POISON)
+		 [13]: -nan(ind) (POISON)
+		 [14]: -nan(ind) (POISON)
+		 [15]: -nan(ind) (POISON)
+		Canary data 2: 14153216
+		}
+	}
+********************************************************************************
+this dump was called from a function StackPop_double
+TIME: 2020-12-06 03:05:11.044
+Stack (OK) [0x000000F2C76FF8C0] "stk"
+	{
+	Type of data is double
+	Capacity           = 16
+	Ñurrent size       = 7
+
+	Canary stack 1     = 28292206
+	Canary stack 2     = 28292206
+
+	Stack hash         = 0x266ABC8AEFEE3B58
+	Data hash          = 0x3E39E904976B9031
+
+	Data [0x0000025798E50448]
+		{
+		Canary data 1: 28292206
+		*[0]: 10.100000
+		*[1]: -12.200000
+		*[2]: 0.112255
+		*[3]: -0.400000
+		*[4]: 12.000000
+		*[5]: 10.300000
+		*[6]: -12.250000
+		 [7]: -nan(ind) (POISON)
+		 [8]: -nan(ind) (POISON)
+		 [9]: -nan(ind) (POISON)
+		 [10]: -nan(ind) (POISON)
+		 [11]: -nan(ind) (POISON)
+		 [12]: -nan(ind) (POISON)
+		 [13]: -nan(ind) (POISON)
+		 [14]: -nan(ind) (POISON)
+		 [15]: -nan(ind) (POISON)
+		Canary data 2: 28292206
+		}
+	}
+********************************************************************************
+this dump was called from a function StackPop_double
+TIME: 2020-12-06 03:05:11.046
+Stack (OK) [0x000000F2C76FF8C0] "stk"
+	{
+	Type of data is double
+	Capacity           = 16
+	Ñurrent size       = 6
+
+	Canary stack 1     = 56553943
+	Canary stack 2     = 56553943
+
+	Stack hash         = 0xD1458758CD18A96C
+	Data hash          = 0x7B4D4F04976B9031
+
+	Data [0x0000025798E50448]
+		{
+		Canary data 1: 56553943
+		*[0]: 10.100000
+		*[1]: -12.200000
+		*[2]: 0.112255
+		*[3]: -0.400000
+		*[4]: 12.000000
+		*[5]: 10.300000
+		 [6]: -nan(ind) (POISON)
+		 [7]: -nan(ind) (POISON)
+		 [8]: -nan(ind) (POISON)
+		 [9]: -nan(ind) (POISON)
+		 [10]: -nan(ind) (POISON)
+		 [11]: -nan(ind) (POISON)
+		 [12]: -nan(ind) (POISON)
+		 [13]: -nan(ind) (POISON)
+		 [14]: -nan(ind) (POISON)
+		 [15]: -nan(ind) (POISON)
+		Canary data 2: 56553943
+		}
+	}
+********************************************************************************
+this dump was called from a function StackPop_double
+TIME: 2020-12-06 03:05:11.047
+Stack (OK) [0x000000F2C76FF8C0] "stk"
+	{
+	Type of data is double
+	Capacity           = 16
+	Ñurrent size       = 5
+
+	Canary stack 1     = 113086831
+	Canary stack 2     = 113086831
+
+	Stack hash         = 0x1FA82DB990899B70
+	Data hash          = 0x108C87CFA1324D93
+
+	Data [0x0000025798E50448]
+		{
+		Canary data 1: 113086831
+		*[0]: 10.100000
+		*[1]: -12.200000
+		*[2]: 0.112255
+		*[3]: -0.400000
+		*[4]: 12.000000
+		 [5]: -nan(ind) (POISON)
+		 [6]: -nan(ind) (POISON)
+		 [7]: -nan(ind) (POISON)
+		 [8]: -nan(ind) (POISON)
+		 [9]: -nan(ind) (POISON)
+		 [10]: -nan(ind) (POISON)
+		 [11]: -nan(ind) (POISON)
+		 [12]: -nan(ind) (POISON)
+		 [13]: -nan(ind) (POISON)
+		 [14]: -nan(ind) (POISON)
+		 [15]: -nan(ind) (POISON)
+		Canary data 2: 113086831
+		}
+	}
+********************************************************************************
+ERROR: file C:\Users\admin\Documents\Visual Studio 2019\Projects\Stack\Stack\Stack.cpp  line 148  function StackPop_double
+
+this dump was called from a function StackPop_double
+TIME: 2020-12-06 03:05:11.048
+
+Stack cracked, hash corrupted
+
+Stack (ERROR) [0x000000F2C76FF8C0] "stk"
+	{
+	Type of data is double
+	Capacity           = 16
+	Ñurrent size       = 2
+
+	Canary stack 1     = 113086831
+	Canary stack 2     = 113086831
+
+	Stack hash         = 0x1FA82DB990899B70
+	Data hash          = 0x108C87CFA1324D93
+
+	True stack hash    = 0x0D6C84E634F685D4
+	True data hash     = 0x108C87CFA1324D93
+
+	Data [0x0000025798E50448]
+		{
+		Canary data 1: 113086831
+		*[0]: 10.100000
+		*[1]: -12.200000
+		 [2]: 0.112255 (POISON)
+		 [3]: -0.400000 (POISON)
+		 [4]: 12.000000 (POISON)
+		 [5]: -nan(ind) (POISON)
+		 [6]: -nan(ind) (POISON)
+		 [7]: -nan(ind) (POISON)
+		 [8]: -nan(ind) (POISON)
+		 [9]: -nan(ind) (POISON)
+		 [10]: -nan(ind) (POISON)
+		 [11]: -nan(ind) (POISON)
+		 [12]: -nan(ind) (POISON)
+		 [13]: -nan(ind) (POISON)
+		 [14]: -nan(ind) (POISON)
+		 [15]: -nan(ind) (POISON)
+		Canary data 2: 113086831
+		}
+	}
+********************************************************************************
