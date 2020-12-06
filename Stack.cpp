@@ -231,7 +231,7 @@ error_t TEMPLATE(StackDump, TYPE) (TEMPLATE(stack, TYPE)* p_stk, const char* fun
     SYSTEMTIME localtime;
     GetLocalTime(&localtime);
 
-    fprintf(fp, "TIME: %d-%02d-%02d %02d:%02d:%02d.%03d\n",
+    fprintf(fp, "TIME: %d-%02d-%02d %02d:%02d:%02d.%03d\n\n",
         localtime.wYear,
         localtime.wMonth,
         localtime.wDay,

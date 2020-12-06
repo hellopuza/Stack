@@ -38,5 +38,13 @@ int main()
     StackDestruct_double(&stk);
 
 
+    printf("    /|    /|    /|\n"
+           "   //|   //|   //|\n"
+           "  //-|  //-|  //-|\n"
+           " // 0| // 0| // 0|\n"
+           "//===|//===|//===|\n"
+           "| STACK IS GOOD! |\n");
+
+
     return 0;
 }

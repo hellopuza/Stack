@@ -153,7 +153,7 @@ error_t TEMPLATE(StackExpand, TYPE) (TEMPLATE(stack, TYPE)* p_stk);
 error_t TEMPLATE(StackDump, TYPE) (TEMPLATE(stack, TYPE)* p_stk, const char* funcname = "@some function@", const char* logfile = logname);
 
 //------------------------------------------------------------------------------
-/*! @brief   Check stack for problems, canaries, hash (if enabled)
+/*! @brief   Ñheck stack for problems, canaries, hash (if enabled)
  *
  *  @param   p_stk       Pointer to stack
  *  @param   funcname    Name of the function from which the StackCheck was called
@@ -177,7 +177,7 @@ void TEMPLATE(printError, TYPE) (TEMPLATE(stack, TYPE)* p_stk, FILE* fp);
 //------------------------------------------------------------------------------
 /*! @brief   Change canary (if enabled)
  *
- *  @param   canary      Ã‘anary input
+ *  @param   canary      Ñanary input
  *
  *  @return  changed canary
  */
