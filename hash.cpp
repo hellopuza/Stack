@@ -91,9 +91,6 @@ hash_t hash(void* buf, size_t size)
 
     ((size_t*)buf_main)[bm_size/sizeof(size_t) - 1] = size;
 
-    for(int i = 0; i < bm_size; ++i)
-
-
     while (bm_size > HASH_SIZE)
     {
         size_t new_size = bm_size / 2;
