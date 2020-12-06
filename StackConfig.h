@@ -23,6 +23,9 @@ static const char* logname = "log.txt";
 #define CANARY_PROTECT
 #define HASH_PROTECT
 
+#ifndef TYPE
+#define TYPE double
+#endif // TYPE
 
 #define double_PRINT_FORMAT  "%lf"
 #define double_PRINT_TYPE    "double"

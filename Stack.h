@@ -24,10 +24,6 @@
 #include "hash.h"
 #endif // HASH_PROTECT
 
-#ifndef TYPE
-#define TYPE double
-#endif // TYPE
-
 
 #define ASSERTOK(p_stk) if (TEMPLATE(StackCheck, TYPE) (p_stk, __FUNCTION__))                                         \
                         {                                                                                             \
