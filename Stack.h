@@ -24,17 +24,21 @@
 #include "hash.h"
 #endif // HASH_PROTECT
 
+#ifndef TYPE
+#define TYPE double
+#endif // TYPE
 
-#define ASSERTOK if (TEMPLATE(StackCheck, TYPE) (p_stk, __FUNCTION__))                                           \
-                 {                                                                                               \
-                     FILE* log = fopen(logname, "a");                                                            \
-                     assert (log != nullptr);                                                                    \
-                     fprintf(log, "ERROR: file %s  line %d  function %s\n\n", __FILE__, __LINE__, __FUNCTION__); \
-                     printf (     "ERROR: file %s  line %d  function %s\n",   __FILE__, __LINE__, __FUNCTION__); \
-                     fclose(log);                                                                                \
-                     TEMPLATE(StackDump, TYPE) (p_stk, __FUNCTION__, logname);                                   \
-                     exit(p_stk->errCode);/**/                                                                   \
-                 }
+
+#define ASSERTOK(p_stk) if (TEMPLATE(StackCheck, TYPE) (p_stk, __FUNCTION__))                                         \
+                        {                                                                                             \
+                          FILE* log = fopen(logname, "a");                                                            \
+                          assert (log != nullptr);                                                                    \
+                          fprintf(log, "ERROR: file %s  line %d  function %s\n\n", __FILE__, __LINE__, __FUNCTION__); \
+                          printf (     "ERROR: file %s  line %d  function %s\n",   __FILE__, __LINE__, __FUNCTION__); \
+                          fclose(log);                                                                                \
+                          TEMPLATE(StackDump, TYPE) (p_stk, __FUNCTION__, logname);                                   \
+                          exit(p_stk->errCode);/**/                                                                   \
+                        }
 
 
 static char* stack_name = nullptr;

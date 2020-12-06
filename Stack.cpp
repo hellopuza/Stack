@@ -61,7 +61,7 @@ error_t TEMPLATE(_StackConstruct, TYPE) (TEMPLATE(stack, TYPE)* p_stk, size_t ca
     p_stk->stackhash[0] = hash(p_stk, sizeof(struct Stack));
 #endif // HASH_PROTECT
 
-    ASSERTOK
+    ASSERTOK(p_stk);
 
     DUMP_PRINT{ TEMPLATE(StackDump, TYPE) (p_stk, __FUNCTION__); }
 
@@ -72,7 +72,7 @@ error_t TEMPLATE(_StackConstruct, TYPE) (TEMPLATE(stack, TYPE)* p_stk, size_t ca
 
 error_t TEMPLATE(StackDestruct, TYPE) (TEMPLATE(stack, TYPE)* p_stk)
 {
-    ASSERTOK
+    ASSERTOK(p_stk);
 
     if (p_stk->errCode == STACK_DESTRUCTED)
     {
@@ -108,7 +108,7 @@ error_t TEMPLATE(StackDestruct, TYPE) (TEMPLATE(stack, TYPE)* p_stk)
 
 error_t TEMPLATE(StackPush, TYPE) (TEMPLATE(stack, TYPE)* p_stk, TYPE value)
 {
-    ASSERTOK
+    ASSERTOK(p_stk);
 
     if (p_stk->size_cur == p_stk->capacity - 1)
     {
@@ -134,7 +134,7 @@ error_t TEMPLATE(StackPush, TYPE) (TEMPLATE(stack, TYPE)* p_stk, TYPE value)
     p_stk->stackhash[0] = hash(p_stk, sizeof(struct Stack));
 #endif // HASH_PROTECT
 
-    ASSERTOK
+    ASSERTOK(p_stk);
 
     DUMP_PRINT{ TEMPLATE(StackDump, TYPE) (p_stk, __FUNCTION__); }
     
@@ -145,7 +145,7 @@ error_t TEMPLATE(StackPush, TYPE) (TEMPLATE(stack, TYPE)* p_stk, TYPE value)
 
 TYPE TEMPLATE(StackPop, TYPE) (TEMPLATE(stack, TYPE)* p_stk)
 {
-    ASSERTOK
+    ASSERTOK(p_stk);
 
     if (p_stk->errCode == EMPTY_STACK)
     {
@@ -170,7 +170,7 @@ TYPE TEMPLATE(StackPop, TYPE) (TEMPLATE(stack, TYPE)* p_stk)
     p_stk->stackhash[0] = hash(p_stk, sizeof(struct Stack));
 #endif // HASH_PROTECT
 
-    ASSERTOK
+    ASSERTOK(p_stk);
 
     DUMP_PRINT{ TEMPLATE(StackDump, TYPE) (p_stk, __FUNCTION__); }
 
@@ -195,7 +195,7 @@ void TEMPLATE(StackPoison, TYPE) (TEMPLATE(stack, TYPE)* p_stk)
 
 error_t TEMPLATE(StackExpand, TYPE) (TEMPLATE(stack, TYPE)* p_stk)
 {
-    ASSERTOK
+    ASSERTOK(p_stk);
 
     p_stk->capacity *= 2;
 
