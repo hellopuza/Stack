@@ -238,7 +238,7 @@ error_t TEMPLATE(StackDump, TYPE) (TEMPLATE(stack, TYPE)* p_stk, const char* fun
         return NOT_OK;
 
     if (funcname != nullptr)
-        fprintf(fp, "this dump was called from a function %s\n", funcname);
+        fprintf(fp, "This dump was called from a function %s\n", funcname);
 
     SYSTEMTIME localtime;
     GetLocalTime(&localtime);

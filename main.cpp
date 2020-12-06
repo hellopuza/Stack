@@ -6,7 +6,7 @@
     * Author:      Artem Puzankov                                              *
     * Email:       puzankov.ao@phystech.edu                                    *
 *///----------------------------------------------------------------------------
-// 1004 lines
+// 972 lines
 
 #define _CRT_SECURE_NO_WARNINGS
 
@@ -36,6 +36,15 @@ int main()
     StackPop_double(&stk);
 
     StackDestruct_double(&stk);
+
+
+    printf("    /|    /|    /|\n"
+           "   //|   //|   //|\n"
+           "  //-|  //-|  //-|\n"
+           " // 0| // 0| // 0|\n"
+           "//===|//===|//===|\n"
+           "| STACK IS GOOD! |\n");
+
 
     return 0;
 }
