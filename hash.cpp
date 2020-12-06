@@ -120,10 +120,7 @@ hash_t hash(void* buf, size_t size)
 
     hash_t hsh2 = (hash_t)(Keys[size % keys_num]);
 
-    size_t hs_size = (size / HASH_SIZE) * HASH_SIZE;
-
-    if (hs_size == 0)
-        hs_size = HASH_SIZE;
+    size_t hs_size = (size / HASH_SIZE) * HASH_SIZE + HASH_SIZE;
 
     char* hs_main = (char*)calloc(hs_size, 1);
 
