@@ -10,9 +10,7 @@
 
 #define _CRT_SECURE_NO_WARNINGS
 
-#define TYPE double
 #include "Stack.h"
-#undef TYPE
 
 int main()
 {
