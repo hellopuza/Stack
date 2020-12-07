@@ -261,9 +261,18 @@ error_t TEMPLATE(StackDump, TYPE) (TEMPLATE(stack, TYPE)* p_stk, const char* fun
         localtime.wSecond,
         localtime.wMilliseconds);
 
-    
-    if ( (p_stk->errCode == NULL_STACK_PTR)       ||
-         (p_stk->errCode == NOT_CONSTRUCTED)      ||
+    if (p_stk == nullptr)
+    {
+        fprintf(fp, "Stack (ERROR) [0x%p] \"unidentified stack\"\n", p_stk);
+        fprintf(fp, errstr[NULL_STACK_PTR]);
+
+        fprintf(fp, "%s\n", divline);
+        fclose(fp);
+
+        return OK;
+    }
+
+    if ( (p_stk->errCode == NOT_CONSTRUCTED)      ||
          (p_stk->errCode == STACK_DESTRUCTED)     ||
          (p_stk->errCode == NULL_DATA_PTR)        ||
          (p_stk->errCode == SIZE_BIGGER_CAPACITY) ||
@@ -346,9 +355,6 @@ error_t TEMPLATE(StackCheck, TYPE) (TEMPLATE(stack, TYPE)* p_stk, const char* fu
 {
     if (p_stk == nullptr)
     {
-        p_stk = (TEMPLATE(stack, TYPE)*) calloc(sizeof(struct Stack), 1);
-        p_stk->name = "unidentified stack";
-        p_stk->errCode = NULL_STACK_PTR;
         return NULL_STACK_PTR;
     }
 
@@ -430,12 +436,7 @@ void TEMPLATE(printError, TYPE) (TEMPLATE(stack, TYPE)* p_stk, FILE* fp)
 {
     assert(fp != nullptr);
 
-    if (p_stk == nullptr)
-    {
-        CONSOLE_PRINT{ printf(errstr[NULL_STACK_PTR]); }
-    }
-
-    else if (p_stk->errCode != OK)
+    if (p_stk->errCode != OK)
     {
         CONSOLE_PRINT { printf(errstr[p_stk->errCode]); }
 
