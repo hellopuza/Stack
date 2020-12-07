@@ -36,7 +36,7 @@ static const size_t Keys[keys_num] =
 };
 
 //------------------------------------------------------------------------------
-/*! @brief   Ñircular shift of bits anywhere in any length
+/*! @brief   Circular shift of bits anywhere in any length
  *
  *  @param   buf  Start of memory for turning round
  *  @param   size Size of memory for turning round

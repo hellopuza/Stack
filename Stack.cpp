@@ -55,10 +55,8 @@ error_t TEMPLATE(_StackConstruct, TYPE) (TEMPLATE(stack, TYPE)* p_stk, size_t ca
 #endif // CANARY_PROTECT
 
 #ifdef HASH_PROTECT
-    p_stk->datahash  = (hash_t*)calloc(HASH_SIZE, 1);
-    p_stk->stackhash = (hash_t*)calloc(HASH_SIZE, 1);
-    p_stk->datahash[0]  = hash(p_stk->data, p_stk->capacity * sizeof(TYPE));
-    p_stk->stackhash[0] = hash(p_stk, sizeof(struct Stack));
+    p_stk->datahash  = hash(p_stk->data, p_stk->capacity * sizeof(TYPE));
+    p_stk->stackhash = hash(p_stk, TEMPLATE(StackSizeForHash, TYPE) (p_stk));
 #endif // HASH_PROTECT
 
     ASSERTOK(p_stk);
@@ -74,11 +72,6 @@ error_t TEMPLATE(StackDestruct, TYPE) (TEMPLATE(stack, TYPE)* p_stk)
 {
     ASSERTOK(p_stk);
 
-    if (p_stk->errCode == STACK_DESTRUCTED)
-    {
-        printf(errstr[STACK_DESTRUCTED]);
-        return STACK_DESTRUCTED;
-    }
     p_stk->size_cur = 0;
 
     TEMPLATE(StackPoison, TYPE) (p_stk);
@@ -93,13 +86,12 @@ error_t TEMPLATE(StackDestruct, TYPE) (TEMPLATE(stack, TYPE)* p_stk)
 #endif // CANARY_PROTECT
 
 #ifdef HASH_PROTECT
-    p_stk->datahash[0]  = 0;
-    p_stk->stackhash[0] = 0;
-    free(p_stk->datahash);
-    free(p_stk->stackhash);
+    p_stk->datahash  = 0;
+    p_stk->stackhash = 0;
 #endif // HASH_PROTECT
 
-    p_stk->data = nullptr;
+    p_stk->data    = nullptr;
+    p_stk->errCode = STACK_DESTRUCTED;
 
     return OK;
 }
@@ -130,8 +122,8 @@ error_t TEMPLATE(StackPush, TYPE) (TEMPLATE(stack, TYPE)* p_stk, TYPE value)
 #endif // CANARY_PROTECT
 
 #ifdef HASH_PROTECT
-    p_stk->datahash[0]  = hash(p_stk->data, p_stk->capacity * sizeof(TYPE));
-    p_stk->stackhash[0] = hash(p_stk, sizeof(struct Stack));
+    p_stk->datahash  = hash(p_stk->data, p_stk->capacity * sizeof(TYPE));
+    p_stk->stackhash = hash(p_stk, TEMPLATE(StackSizeForHash, TYPE) (p_stk));
 #endif // HASH_PROTECT
 
     ASSERTOK(p_stk);
@@ -166,8 +158,8 @@ TYPE TEMPLATE(StackPop, TYPE) (TEMPLATE(stack, TYPE)* p_stk)
 #endif // CANARY_PROTECT
 
 #ifdef HASH_PROTECT
-    p_stk->datahash[0]  = hash(p_stk->data, p_stk->capacity * sizeof(TYPE));
-    p_stk->stackhash[0] = hash(p_stk, sizeof(struct Stack));
+    p_stk->datahash  = hash(p_stk->data, p_stk->capacity * sizeof(TYPE));
+    p_stk->stackhash = hash(p_stk, TEMPLATE(StackSizeForHash, TYPE) (p_stk));
 #endif // HASH_PROTECT
 
     ASSERTOK(p_stk);
@@ -228,6 +220,23 @@ error_t TEMPLATE(StackExpand, TYPE) (TEMPLATE(stack, TYPE)* p_stk)
 
 //------------------------------------------------------------------------------
 
+size_t TEMPLATE(StackSizeForHash, TYPE) (TEMPLATE(stack, TYPE)* p_stk)
+{
+    assert(p_stk != nullptr);
+
+    size_t size = 0;
+    
+    size += sizeof(p_stk->canary1);
+    size += sizeof(p_stk->capacity);
+    size += sizeof(p_stk->size_cur);
+    size += sizeof(p_stk->name);
+    size += sizeof(p_stk->data);
+
+    return size;
+}
+
+//------------------------------------------------------------------------------
+
 error_t TEMPLATE(StackDump, TYPE) (TEMPLATE(stack, TYPE)* p_stk, const char* funcname, const char* logfile)
 {
     const size_t linelen = 80;
@@ -252,8 +261,10 @@ error_t TEMPLATE(StackDump, TYPE) (TEMPLATE(stack, TYPE)* p_stk, const char* fun
         localtime.wSecond,
         localtime.wMilliseconds);
 
-
+    
     if ( (p_stk->errCode == NULL_STACK_PTR)       ||
+         (p_stk->errCode == NOT_CONSTRUCTED)      ||
+         (p_stk->errCode == STACK_DESTRUCTED)     ||
          (p_stk->errCode == NULL_DATA_PTR)        ||
          (p_stk->errCode == SIZE_BIGGER_CAPACITY) ||
          (p_stk->errCode == CAPACITY_WRONG_VALUE)    )
@@ -290,12 +301,12 @@ error_t TEMPLATE(StackDump, TYPE) (TEMPLATE(stack, TYPE)* p_stk, const char* fun
 #endif // CANARY_PROTECT
 
 #ifdef HASH_PROTECT
-        fprintf(fp, "\tStack hash         = 0x" HASH_PRINT_FORMAT "\n",   *(p_stk->stackhash));
-        fprintf(fp, "\tData hash          = 0x" HASH_PRINT_FORMAT "\n\n", *(p_stk->datahash));
+        fprintf(fp, "\tStack hash         = 0x" HASH_PRINT_FORMAT "\n",   p_stk->stackhash);
+        fprintf(fp, "\tData hash          = 0x" HASH_PRINT_FORMAT "\n\n", p_stk->datahash);
         
         if (p_stk->errCode)
         {
-        fprintf(fp, "\tTrue stack hash    = 0x" HASH_PRINT_FORMAT "\n",   hash(p_stk, sizeof(struct Stack)));
+        fprintf(fp, "\tTrue stack hash    = 0x" HASH_PRINT_FORMAT "\n",   hash(p_stk, TEMPLATE(StackSizeForHash, TYPE) (p_stk)));
         fprintf(fp, "\tTrue data hash     = 0x" HASH_PRINT_FORMAT "\n\n", hash(p_stk->data, p_stk->capacity * sizeof(TYPE)));
         }
 #endif // HASH_PROTECT
@@ -336,15 +347,29 @@ error_t TEMPLATE(StackCheck, TYPE) (TEMPLATE(stack, TYPE)* p_stk, const char* fu
     if (p_stk == nullptr)
     {
         p_stk = (TEMPLATE(stack, TYPE)*) calloc(sizeof(struct Stack), 1);
+        p_stk->name = "unidentified stack";
         p_stk->errCode = NULL_STACK_PTR;
         return NULL_STACK_PTR;
     }
 
-    if ((p_stk->data == nullptr) && (funcname == "StackDestruct_" TEMPLATE(TYPE, PRINT_TYPE)))
+    if (p_stk->errCode == NOT_CONSTRUCTED)
     {
-        p_stk->errCode = STACK_DESTRUCTED;
-        return OK;
+        p_stk->name = "unidentified stack";
+        return NOT_CONSTRUCTED;
     }
+
+    if (p_stk->errCode == STACK_DESTRUCTED)
+    {
+        return STACK_DESTRUCTED;
+    }
+
+#ifdef HASH_PROTECT
+    if (p_stk->stackhash != hash(p_stk, TEMPLATE(StackSizeForHash, TYPE) (p_stk)))
+    {
+        p_stk->errCode = INCORRECT_HASH;
+        return INCORRECT_HASH;
+    }
+#endif // HASH_PROTECT
 
     if (p_stk->data == nullptr)
     {
@@ -385,8 +410,7 @@ error_t TEMPLATE(StackCheck, TYPE) (TEMPLATE(stack, TYPE)* p_stk, const char* fu
 #endif // CANARY_PROTECT
 
 #ifdef HASH_PROTECT
-    if (   (p_stk->stackhash[0] != hash(p_stk, sizeof(struct Stack)))
-        || (p_stk->datahash[0]  != hash(p_stk->data, p_stk->capacity * sizeof(TYPE))) )
+    if (p_stk->datahash != hash(p_stk->data, p_stk->capacity * sizeof(TYPE)))
     {
         p_stk->errCode = INCORRECT_HASH;
         return INCORRECT_HASH;

@@ -25,6 +25,11 @@
 #endif // HASH_PROTECT
 
 
+#ifndef TYPE
+#define TYPE int
+#endif // TYPE
+
+
 #define ASSERTOK(p_stk) if (TEMPLATE(StackCheck, TYPE) (p_stk, __FUNCTION__))                                         \
                         {                                                                                             \
                           FILE* log = fopen(logname, "a");                                                            \
@@ -67,12 +72,12 @@ typedef struct Stack
 
     TYPE* data;
     
-#ifdef HASH_PROTECT
-    hash_t* stackhash;
-    hash_t* datahash;
-#endif // HASH_PROTECT
+    int errCode = NOT_CONSTRUCTED;
     
-    int errCode;
+#ifdef HASH_PROTECT
+    hash_t stackhash;
+    hash_t datahash;
+#endif // HASH_PROTECT
     
     can_t canary2;
 //////////////TRY-TO-HACK///////////////
@@ -149,6 +154,16 @@ int TEMPLATE(isPOISON, TYPE) (TYPE value);
  */
 
 error_t TEMPLATE(StackExpand, TYPE) (TEMPLATE(stack, TYPE)* p_stk);
+
+//------------------------------------------------------------------------------
+/*! @brief   Calculates the size of the structure stack without hash and second canary
+ *
+ *  @param   p_stk       Pointer to stack
+ *
+ *  @return  stack size for hash
+ */
+
+size_t TEMPLATE(StackSizeForHash, TYPE) (TEMPLATE(stack, TYPE)* p_stk);
 
 //------------------------------------------------------------------------------
 /*! @brief   (THE BEST FUNCTION) Print the contents of the stack and its data to the logfile

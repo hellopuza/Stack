@@ -64,6 +64,7 @@ enum Errors
     NULL_STACK_PTR                                                  ,
     WRONG_CUR_SIZE                                                  ,
     INCORRECT_HASH                                                  ,
+    NOT_CONSTRUCTED                                                 ,
     STACK_DESTRUCTED                                                ,
     SIZE_BIGGER_CAPACITY                                            ,
     CAPACITY_WRONG_VALUE                                            ,
@@ -80,7 +81,8 @@ static const char* errstr[] =
     "\nThe pointer to the stack is null, stack lost\n\n"            ,
     "\nCurrent size of stack data is wrong\n\n"                     ,
     "\nStack cracked, hash corrupted\n\n"                           ,
-    "\nStack already destructed\n"                                  ,
+    "\nStack did not constructed, operation is impossible\n"        ,
+    "\nStack already destructed\n\n"                                ,
     "\nThe size of the stack data is larger than the capacity\n\n"  ,
     "\nBad size stack capacity\n\n"                                 ,
 };
