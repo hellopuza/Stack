@@ -128,7 +128,7 @@ hash_t hash(void* buf, size_t size)
 
     for (int h = hs_size - HASH_SIZE; h >= 0; --h)
     {
-        hsh2 = (hsh2 ^ (hash_t) * ((char*)hs_main + h)) * (hsh1 ^ (hash_t) * ((char*)hs_main + hs_size - 1 - h));
+        hsh2 = (hsh2 ^ *((char*)hs_main + h)) * (hsh1 ^ *((char*)hs_main + hs_size - 1 - h));
     }
     free(hs_main);
 
