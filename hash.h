@@ -58,5 +58,7 @@ hash_t hash(void* buf, size_t size);
 
 //------------------------------------------------------------------------------
 
+#include "hash.cpp"
+
 #endif // HASH_H_INCLUDED
 

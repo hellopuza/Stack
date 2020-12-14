@@ -7,13 +7,15 @@
     * Email:       puzankov.ao@phystech.edu                                    *
 *///----------------------------------------------------------------------------
 
-#include "Stack.h"
-
-//------------------------------------------------------------------------------
-
 error_t TEMPLATE(_StackConstruct, TYPE) (TEMPLATE(stack, TYPE)* p_stk, size_t capacity, char* stack_name)
 {
-    if (capacity > MAX_CAPACITY)
+    if ((p_stk->errCode != NOT_CONSTRUCTED) && (p_stk->errCode != STACK_DESTRUCTED))
+    {
+        printf(errstr[STACK_CONSTRUCTED]);
+
+        return STACK_CONSTRUCTED;
+    }
+    else if (capacity > MAX_CAPACITY)
     {
         printf("Wrong capacity value: %d - is too big\n", capacity);
         printf("impossible to create a stack\n");
@@ -27,9 +29,16 @@ error_t TEMPLATE(_StackConstruct, TYPE) (TEMPLATE(stack, TYPE)* p_stk, size_t ca
 
         return CAPACITY_WRONG_VALUE;
     }
+    else if (stack_id == MAX_STACK_NUM)
+    {
+        printf("Cannot create new stack \n", capacity);
+        printf("max number of stacks is %u\n", MAX_STACK_NUM);
+
+        return NO_MEMORY;
+    }
 
     void* temp = calloc(capacity * sizeof(TYPE) + 2 * sizeof(can_t), sizeof(char));
-    
+
     if (temp == nullptr)
     {
         printf("\n%s", errstr[NO_MEMORY]);
@@ -48,9 +57,13 @@ error_t TEMPLATE(_StackConstruct, TYPE) (TEMPLATE(stack, TYPE)* p_stk, size_t ca
 
     p_stk->errCode = OK;
 
+    p_stk->id = stack_id;
+    stack_id++;
+
 
 #ifdef CANARY_PROTECT
-    perfect_canary = CanaryChange(perfect_canary);
+    perfect_canary      = TEMPLATE(CanaryChange, TYPE) (perfect_canary);
+    canaries[p_stk->id] = perfect_canary;
     TEMPLATE(CanaryPlacing, TYPE) (p_stk);
 #endif // CANARY_PROTECT
 
@@ -117,7 +130,7 @@ error_t TEMPLATE(StackPush, TYPE) (TEMPLATE(stack, TYPE)* p_stk, TYPE value)
 
 
 #ifdef CANARY_PROTECT
-    perfect_canary = CanaryChange(perfect_canary);
+    canaries[p_stk->id] = TEMPLATE(CanaryChange, TYPE) (canaries[p_stk->id]);
     TEMPLATE(CanaryPlacing, TYPE) (p_stk);
 #endif // CANARY_PROTECT
 
@@ -129,7 +142,7 @@ error_t TEMPLATE(StackPush, TYPE) (TEMPLATE(stack, TYPE)* p_stk, TYPE value)
     ASSERTOK(p_stk);
 
     DUMP_PRINT{ TEMPLATE(StackDump, TYPE) (p_stk, __FUNCTION__); }
-    
+
     return OK;
 }
 
@@ -153,7 +166,7 @@ TYPE TEMPLATE(StackPop, TYPE) (TEMPLATE(stack, TYPE)* p_stk)
 
 
 #ifdef CANARY_PROTECT
-    perfect_canary = CanaryChange(perfect_canary);
+    canaries[p_stk->id] = TEMPLATE(CanaryChange, TYPE) (canaries[p_stk->id]);
     TEMPLATE(CanaryPlacing, TYPE) (p_stk);
 #endif // CANARY_PROTECT
 
@@ -210,7 +223,7 @@ error_t TEMPLATE(StackExpand, TYPE) (TEMPLATE(stack, TYPE)* p_stk)
     void* oldtemp = (char*)p_stk->data - sizeof(can_t);
     memcpy(temp, (char*)p_stk->data - sizeof(can_t), p_stk->capacity * sizeof(TYPE) + 2 * sizeof(can_t));
     free(oldtemp);
-    
+
     p_stk->data = (TYPE*)((char*)temp + sizeof(can_t));
 
     TEMPLATE(StackPoison, TYPE) (p_stk);
@@ -225,12 +238,14 @@ size_t TEMPLATE(StackSizeForHash, TYPE) (TEMPLATE(stack, TYPE)* p_stk)
     assert(p_stk != nullptr);
 
     size_t size = 0;
-    
+
     size += sizeof(p_stk->canary1);
     size += sizeof(p_stk->capacity);
     size += sizeof(p_stk->size_cur);
     size += sizeof(p_stk->name);
     size += sizeof(p_stk->data);
+    size += sizeof(p_stk->errCode);
+    size += sizeof(p_stk->id);
 
     return size;
 }
@@ -278,7 +293,7 @@ error_t TEMPLATE(StackDump, TYPE) (TEMPLATE(stack, TYPE)* p_stk, const char* fun
          (p_stk->errCode == SIZE_BIGGER_CAPACITY) ||
          (p_stk->errCode == CAPACITY_WRONG_VALUE)    )
     {
-        fprintf(fp, "Stack (ERROR) [0x%p] \"%s\"\n", p_stk, p_stk->name);
+        fprintf(fp, "Stack (ERROR) [0x%p] \"%s\" id (%d)\n", p_stk, p_stk->name, p_stk->id);
         TEMPLATE(printError, TYPE) (p_stk, fp);
 
         fprintf(fp, "%s\n", divline);
@@ -286,23 +301,24 @@ error_t TEMPLATE(StackDump, TYPE) (TEMPLATE(stack, TYPE)* p_stk, const char* fun
 
         return OK;
     }
-    
+
     char* StkState = (char*)errstr[OK];
 
     if (p_stk->errCode)
     {
         if ((p_stk->errCode == CANARY_DIED) || (p_stk->errCode == INCORRECT_HASH))
             StkState = (char*)errstr[NOT_OK];
-        
+
         TEMPLATE(printError, TYPE) (p_stk, fp);
     }
 
-    fprintf(fp, "Stack (%s) [0x%p] \"%s\"\n", StkState, p_stk, p_stk->name);
+    fprintf(fp, "Stack (%s) [0x%p] \"%s\", id (%d)\n", StkState, p_stk, p_stk->name, p_stk->id);
     fprintf(fp, "\t{\n");
 
-        fprintf(fp, "\tType of data is %s\n", TEMPLATE(TYPE, PRINT_TYPE));
-        fprintf(fp, "\tCapacity           = %d\n",   p_stk->capacity);
-        fprintf(fp, "\tCurrent size       = %d\n\n", p_stk->size_cur);
+        fprintf(fp, "\tType of data is %s\n\n", TEMPLATE(TYPE, PRINT_TYPE));
+
+        fprintf(fp, "\tCapacity           = %u\n",   p_stk->capacity);
+        fprintf(fp, "\tCurrent size       = %u\n\n", p_stk->size_cur);
 
 #ifdef CANARY_PROTECT
         fprintf(fp, "\tCanary stack 1     = " CAN_PRINT_FORMAT "\n",   p_stk->canary1);
@@ -312,7 +328,7 @@ error_t TEMPLATE(StackDump, TYPE) (TEMPLATE(stack, TYPE)* p_stk, const char* fun
 #ifdef HASH_PROTECT
         fprintf(fp, "\tStack hash         = 0x" HASH_PRINT_FORMAT "\n",   p_stk->stackhash);
         fprintf(fp, "\tData hash          = 0x" HASH_PRINT_FORMAT "\n\n", p_stk->datahash);
-        
+
         if (p_stk->errCode)
         {
         fprintf(fp, "\tTrue stack hash    = 0x" HASH_PRINT_FORMAT "\n",   hash(p_stk, TEMPLATE(StackSizeForHash, TYPE) (p_stk)));
@@ -361,6 +377,7 @@ error_t TEMPLATE(StackCheck, TYPE) (TEMPLATE(stack, TYPE)* p_stk, const char* fu
     if (p_stk->errCode == NOT_CONSTRUCTED)
     {
         p_stk->name = "unidentified stack";
+        p_stk->id   = -666;
         return NOT_CONSTRUCTED;
     }
 
@@ -382,7 +399,7 @@ error_t TEMPLATE(StackCheck, TYPE) (TEMPLATE(stack, TYPE)* p_stk, const char* fu
         p_stk->errCode = NULL_DATA_PTR;
         return NULL_DATA_PTR;
     }
-    
+
     if (p_stk->size_cur > p_stk->capacity)
     {
         p_stk->errCode = SIZE_BIGGER_CAPACITY;
@@ -436,7 +453,12 @@ void TEMPLATE(printError, TYPE) (TEMPLATE(stack, TYPE)* p_stk, FILE* fp)
 {
     assert(fp != nullptr);
 
-    if (p_stk->errCode != OK)
+    if (p_stk == nullptr)
+    {
+        CONSOLE_PRINT{ printf(errstr[NULL_STACK_PTR]); }
+    }
+
+    else if (p_stk->errCode != OK)
     {
         CONSOLE_PRINT { printf(errstr[p_stk->errCode]); }
 
@@ -452,9 +474,9 @@ void TEMPLATE(printError, TYPE) (TEMPLATE(stack, TYPE)* p_stk, FILE* fp)
 
 //------------------------------------------------------------------------------
 
-can_t CanaryChange(can_t canary)
+can_t TEMPLATE(CanaryChange, TYPE) (can_t canary)
 {
-    return (perfect_canary * 2 + rand() * (rand() % 3 - 1)) % ULLONG_MAX;
+    return (canary * 2 + rand() * (rand() % 3 - 1)) % ULLONG_MAX;
 }
 
 //------------------------------------------------------------------------------
@@ -463,27 +485,27 @@ void TEMPLATE(CanaryPlacing, TYPE) (TEMPLATE(stack, TYPE)* p_stk)
 {
     assert(p_stk != nullptr);
 
-    p_stk->canary1 = perfect_canary;
-    p_stk->canary2 = perfect_canary;
-    
-    ((can_t*)p_stk->data)[-1] = perfect_canary;
-    ((can_t*)p_stk->data)[p_stk->capacity * sizeof(TYPE) / sizeof(can_t)] = perfect_canary;
+    p_stk->canary1 = canaries[p_stk->id];
+    p_stk->canary2 = canaries[p_stk->id];
+
+    ((can_t*)p_stk->data)[-1] = canaries[p_stk->id];
+    ((can_t*)p_stk->data)[p_stk->capacity * sizeof(TYPE) / sizeof(can_t)] = canaries[p_stk->id];
 }
 
 //------------------------------------------------------------------------------
 
 int TEMPLATE(CanaryCheck, TYPE) (TEMPLATE(stack, TYPE)* p_stk)
 {
-    if (p_stk->canary1 != perfect_canary)
+    if (p_stk->canary1 != canaries[p_stk->id])
         return NOT_OK;
 
-    if (p_stk->canary2 != perfect_canary)
+    if (p_stk->canary2 != canaries[p_stk->id])
         return NOT_OK;
 
-    if (((can_t*)p_stk->data)[-1] != perfect_canary)
+    if (((can_t*)p_stk->data)[-1] != canaries[p_stk->id])
         return NOT_OK;
 
-    if (((can_t*)p_stk->data)[p_stk->capacity * sizeof(TYPE) / sizeof(can_t)] != perfect_canary)
+    if (((can_t*)p_stk->data)[p_stk->capacity * sizeof(TYPE) / sizeof(can_t)] != canaries[p_stk->id])
         return NOT_OK;
 
     return OK;

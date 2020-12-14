@@ -30,6 +30,7 @@
 #endif // TYPE
 
 
+
 #define ASSERTOK(p_stk) if (TEMPLATE(StackCheck, TYPE) (p_stk, __FUNCTION__))                                         \
                         {                                                                                             \
                           FILE* log = fopen(logname, "a");                                                            \
@@ -42,7 +43,16 @@
                         }
 
 
+#ifndef STACK_ID
+static int stack_id = 0;
+#define STACK_ID
+#endif // STACK_ID
+
+
+#ifndef STACK_NAME
 static char* stack_name = nullptr;
+#define STACK_NAME
+#endif // STACK_NAME
 
 #define StackConstruct_double(p_stk, capacity)                                                                   \
         stack_name = (char*)#p_stk;                                                                              \
@@ -61,7 +71,7 @@ static char* stack_name = nullptr;
         TEMPLATE(_StackConstruct, char) (p_stk, capacity, ++stack_name);                                         \
 
 
-typedef struct Stack
+typedef struct TEMPLATE(Stack, TYPE)
 {
 //////////////TRY-TO-HACK///////////////
     can_t canary1;
@@ -71,14 +81,15 @@ typedef struct Stack
     const char* name;
 
     TYPE* data;
-    
+
     int errCode = NOT_CONSTRUCTED;
-    
+    int id;
+
 #ifdef HASH_PROTECT
     hash_t stackhash;
     hash_t datahash;
 #endif // HASH_PROTECT
-    
+
     can_t canary2;
 //////////////TRY-TO-HACK///////////////
 } TEMPLATE(stack, TYPE);
@@ -209,7 +220,7 @@ void TEMPLATE(printError, TYPE) (TEMPLATE(stack, TYPE)* p_stk, FILE* fp);
 
 #ifdef CANARY_PROTECT
 
-can_t CanaryChange(can_t canary);
+can_t TEMPLATE(CanaryChange, TYPE) (can_t canary);
 
 #endif // CANARY_PROTECT
 
@@ -242,3 +253,4 @@ int TEMPLATE(CanaryCheck, TYPE) (TEMPLATE(stack, TYPE)* p_stk);
 
 //------------------------------------------------------------------------------
 
+#include "Stack.cpp"

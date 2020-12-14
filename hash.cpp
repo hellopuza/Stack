@@ -7,10 +7,6 @@
     * Email:       puzankov.ao@phystech.edu                                    *
 *///----------------------------------------------------------------------------
 
-#include "hash.h"
-
-//------------------------------------------------------------------------------
-
 void bit_rotate(void* buf, size_t size, int dir)
 {
     assert(buf != nullptr);

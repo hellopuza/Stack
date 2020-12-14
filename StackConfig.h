@@ -23,9 +23,6 @@ static const char* logname = "log.txt";
 #define CANARY_PROTECT
 #define HASH_PROTECT
 
-#ifndef TYPE
-#define TYPE double
-#endif // TYPE
 
 #define double_PRINT_FORMAT  "%lf"
 #define double_PRINT_TYPE    "double"
@@ -45,12 +42,20 @@ static const char* logname = "log.txt";
 
 
 typedef size_t error_t;
+
+static const size_t MAX_STACK_NUM = 100;
+static const size_t MAX_CAPACITY  = 100000;
+
+
+#ifdef CANARY_PROTECT
+
 typedef unsigned long long can_t;
 #define CAN_PRINT_FORMAT "%llu"
 
 static can_t perfect_canary = (srand(time(NULL)), rand());
+static can_t canaries[MAX_STACK_NUM] = {};
 
-#define MAX_CAPACITY 100000
+#endif //CANARY_PROTECT
 
 
 enum Errors
@@ -66,6 +71,7 @@ enum Errors
     INCORRECT_HASH                                                  ,
     NOT_CONSTRUCTED                                                 ,
     STACK_DESTRUCTED                                                ,
+    STACK_CONSTRUCTED                                               ,
     SIZE_BIGGER_CAPACITY                                            ,
     CAPACITY_WRONG_VALUE                                            ,
 };
@@ -83,6 +89,7 @@ static const char* errstr[] =
     "\nStack cracked, hash corrupted\n\n"                           ,
     "\nStack did not constructed, operation is impossible\n"        ,
     "\nStack already destructed\n\n"                                ,
+    "\nStack already constructed\n"                                 ,
     "\nThe size of the stack data is larger than the capacity\n\n"  ,
     "\nBad size stack capacity\n\n"                                 ,
 };
