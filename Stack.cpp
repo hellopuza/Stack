@@ -200,8 +200,8 @@ void TEMPLATE(StackPoison, TYPE) (TEMPLATE(stack, TYPE)* p_stk)
 
 int TEMPLATE(isPOISON, TYPE) (TYPE value)
 {
-    if (isnan(TEMPLATE(TYPE, POISON)))
-        if (isnan(value))
+    if (isnan((double) TEMPLATE(TYPE, POISON)))
+        if (isnan((double)value))
             return 1;
         else
             return 0;
