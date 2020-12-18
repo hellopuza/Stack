@@ -265,7 +265,7 @@ error_t TEMPLATE(StackDump, TYPE) (TEMPLATE(stack, TYPE)* p_stk, const char* fun
     if (funcname != nullptr)
         fprintf(fp, "This dump was called from a function %s\n", funcname);
 
-    SYSTEMTIME localtime;
+    SYSTEMTIME localtime = {};
     GetLocalTime(&localtime);
 
     fprintf(fp, "TIME: %d-%02d-%02d %02d:%02d:%02d.%03d\n\n",
