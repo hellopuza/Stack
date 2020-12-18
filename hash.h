@@ -24,10 +24,10 @@ typedef unsigned long long hash_t;
 #define MAX_HASH  ULLONG_MAX
 #define HASH_PRINT_FORMAT "%p%p"
 
-static const size_t block_size = 64;
-static const size_t keys_num   = 16;
+static const size_t BLOCK_SIZE = 64;
+static const size_t KEYS_NUM   = 16;
 
-static const size_t Keys[keys_num] =
+static const size_t Keys[KEYS_NUM] =
 {
     0x26964da6, 0x69b25a6d, 0x9b4d9693, 0x64d26d2c,
     0x4b65a6c9, 0x9a592d36, 0xa4da6cb4, 0x4b2696c9,
@@ -41,9 +41,11 @@ static const size_t Keys[keys_num] =
  *  @param   buf  Start of memory for turning round
  *  @param   size Size of memory for turning round
  *  @param   dir  Direction of turning, if >0 - right, if <0 - left
+ * 
+ *  @return 0 if error, 1 if ok
  */
 
-void bit_rotate(void* buf, size_t size, int dir);
+int bit_rotate(void* buf, size_t size, int dir);
 
 //------------------------------------------------------------------------------
 /*! @brief   Hash counting
@@ -51,7 +53,7 @@ void bit_rotate(void* buf, size_t size, int dir);
  *  @param   buf  Start of memory to be hashable
  *  @param   size Size of memory to be hashable
  *
- *  @return  hash
+ *  @return  0 if error, else hash
  */
 
 hash_t hash(void* buf, size_t size);
