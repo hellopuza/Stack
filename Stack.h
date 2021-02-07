@@ -39,7 +39,7 @@
                           printf (     "ERROR: file %s  line %d  function %s\n",   __FILE__, __LINE__, __FUNCTION__); \
                           fclose(log);                                                                                \
                           TEMPLATE(StackDump, TYPE) (p_stk, __FUNCTION__, logname);                                   \
-                          exit(p_stk->errCode);/**/                                                                   \
+                          exit(p_stk->errCode); /**/                                                                  \
                         }
 
 

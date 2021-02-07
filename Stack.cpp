@@ -75,7 +75,7 @@ error_t TEMPLATE(_StackConstruct, TYPE) (TEMPLATE(stack, TYPE)* p_stk, size_t ca
 
     ASSERTOK(p_stk);
 
-    DUMP_PRINT{ TEMPLATE(StackDump, TYPE) (p_stk, __FUNCTION__); }
+    DUMP_PRINT { TEMPLATE(StackDump, TYPE) (p_stk, __FUNCTION__); }
 
     return OK;
 }
@@ -142,7 +142,7 @@ error_t TEMPLATE(StackPush, TYPE) (TEMPLATE(stack, TYPE)* p_stk, TYPE value)
 
     ASSERTOK(p_stk);
 
-    DUMP_PRINT{ TEMPLATE(StackDump, TYPE) (p_stk, __FUNCTION__); }
+    DUMP_PRINT { TEMPLATE(StackDump, TYPE) (p_stk, __FUNCTION__); }
 
     return OK;
 }
@@ -178,7 +178,7 @@ TYPE TEMPLATE(StackPop, TYPE) (TEMPLATE(stack, TYPE)* p_stk)
 
     ASSERTOK(p_stk);
 
-    DUMP_PRINT{ TEMPLATE(StackDump, TYPE) (p_stk, __FUNCTION__); }
+    DUMP_PRINT { TEMPLATE(StackDump, TYPE) (p_stk, __FUNCTION__); }
 
     return value;
 }
@@ -456,7 +456,7 @@ void TEMPLATE(printError, TYPE) (TEMPLATE(stack, TYPE)* p_stk, FILE* fp)
 
     if (p_stk == nullptr)
     {
-        CONSOLE_PRINT{ printf(errstr[NULL_STACK_PTR]); }
+        CONSOLE_PRINT { printf(errstr[NULL_STACK_PTR]); }
     }
 
     else if (p_stk->errCode != OK)
