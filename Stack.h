@@ -54,21 +54,9 @@ static char* stack_name = nullptr;
 #define STACK_NAME
 #endif // STACK_NAME
 
-#define StackConstruct_double(p_stk, capacity)                                                                   \
-        stack_name = (char*)#p_stk;                                                                              \
-        TEMPLATE(_StackConstruct, double) (p_stk, capacity, ++stack_name);                                       \
-
-#define StackConstruct_float(p_stk, capacity)                                                                    \
-        stack_name = (char*)#p_stk;                                                                              \
-        TEMPLATE(_StackConstruct, float) (p_stk, capacity, ++stack_name);                                        \
-
-#define StackConstruct_int(p_stk, capacity)                                                                      \
-        stack_name = (char*)#p_stk;                                                                              \
-        TEMPLATE(_StackConstruct, int) (p_stk, capacity, ++stack_name);                                          \
-
-#define StackConstruct_char(p_stk, capacity)                                                                     \
-        stack_name = (char*)#p_stk;                                                                              \
-        TEMPLATE(_StackConstruct, char) (p_stk, capacity, ++stack_name);                                         \
+#define StackConstruct(p_stk, capacity, STK_TYPE)                              \
+        stack_name = (char*)#p_stk;                                            \
+        TEMPLATE(StackConstruct, STK_TYPE)(p_stk, capacity, ++stack_name);
 
 
 typedef struct TEMPLATE(Stack, TYPE)
