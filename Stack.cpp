@@ -8,7 +8,7 @@
 *///----------------------------------------------------------------------------
 
 
-error_t TEMPLATE(StackConstruct, TYPE) (TEMPLATE(stack, TYPE)* p_stk, size_t capacity, char* stack_name)
+error_t TEMPLATE(_StackConstruct, TYPE) (TEMPLATE(stack, TYPE)* p_stk, size_t capacity, char* stack_name)
 {
     if ((p_stk->errCode != NOT_CONSTRUCTED) && (p_stk->errCode != STACK_DESTRUCTED))
     {
@@ -213,8 +213,6 @@ int TEMPLATE(isPOISON, TYPE) (TYPE value)
 
 error_t TEMPLATE(StackExpand, TYPE) (TEMPLATE(stack, TYPE)* p_stk)
 {
-    ASSERTOK(p_stk);
-
     p_stk->capacity *= 2;
 
     void* temp = calloc(p_stk->capacity * sizeof(TYPE) + 2 * sizeof(can_t), sizeof(char));

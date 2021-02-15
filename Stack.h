@@ -30,7 +30,6 @@
 #endif // TYPE
 
 
-
 #define ASSERTOK(p_stk) if (TEMPLATE(StackCheck, TYPE) (p_stk, __FUNCTION__))                                         \
                         {                                                                                             \
                           FILE* log = fopen(logname, "a");                                                            \
@@ -54,9 +53,9 @@ static char* stack_name = nullptr;
 #define STACK_NAME
 #endif // STACK_NAME
 
-#define StackConstruct(p_stk, capacity, STK_TYPE)                              \
-        stack_name = (char*)#p_stk;                                            \
-        TEMPLATE(StackConstruct, STK_TYPE)(p_stk, capacity, ++stack_name);
+#define StackConstruct(NAME, capacity, STK_TYPE)                              \
+        TEMPLATE(stack, STK_TYPE) NAME;                                       \
+        TEMPLATE(_StackConstruct, STK_TYPE)(&##NAME, capacity, (char*)#NAME);
 
 
 typedef struct TEMPLATE(Stack, TYPE)

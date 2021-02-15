@@ -20,12 +20,10 @@
 
 int main()
 {
-    stack_double stk = {};
-    StackConstruct(&stk, 8, double);
+    StackConstruct(stk, 8, double);
 
-    stack_int stk2   = {};
-    StackConstruct(&stk2, 8, int);
-
+    StackConstruct(stk2, 8, int);
+    
     StackPush_double(&stk, 10.1);
     StackPush_double(&stk, -12.2);
     StackPush_double(&stk, 11.22552e-2);
