@@ -18,7 +18,7 @@
 
 #define CONSOLE_PRINT if(1)
 #define DUMP_PRINT    if(1)
-static const char* logname = "log.txt";
+static const char* logname = "stack.log";
 
 #define CANARY_PROTECT
 #define HASH_PROTECT
@@ -62,8 +62,8 @@ static can_t canaries[MAX_STACK_NUM] = {};
 
 enum Errors
 {
+    NOT_OK = -1                                                     ,
     OK = 0                                                          ,
-    NOT_OK                                                          ,
     NO_MEMORY                                                       ,
     CANARY_DIED                                                     ,
     EMPTY_STACK                                                     ,
@@ -80,8 +80,8 @@ enum Errors
 
 static const char* errstr[] =
 {
-    "OK"                                                            ,
     "ERROR"                                                         ,
+    "OK"                                                            ,
     "\nFailed to allocate memory\n"                                 ,
     "\nStack cracked, canary was killed\n\n"                        ,
     "\nStack is empty\n"                                            ,
