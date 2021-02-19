@@ -201,7 +201,7 @@ static void TEMPLATE(printError, TYPE) (TEMPLATE(stack, TYPE)* p_stk, FILE* fp);
 //------------------------------------------------------------------------------
 /*! @brief   Change canary (if enabled)
  *
- *  @param   canary      Ñanary input
+ *  @param   canary      Ã‘anary input
  *
  *  @return  changed canary
  */
@@ -422,8 +422,6 @@ static TYPE TEMPLATE(StackPop, TYPE) (TEMPLATE(stack, TYPE)* p_stk)
     p_stk->datahash  = hash(p_stk->data, p_stk->capacity * sizeof(TYPE));
     p_stk->stackhash = hash(p_stk, TEMPLATE(StackSizeForHash, TYPE) (p_stk));
 #endif // HASH_PROTECT
-
-    ASSERTOK(p_stk);
 
     DUMP_PRINT{ TEMPLATE(StackDump, TYPE) (p_stk, __FUNCTION__); }
 
