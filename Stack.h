@@ -308,7 +308,7 @@ static error_t TEMPLATE(_StackConstruct, TYPE) (TEMPLATE(stack, TYPE)* p_stk, si
 #endif // CANARY_PROTECT
 
 #ifdef HASH_PROTECT
-    p_stk->datahash = hash(p_stk->data, p_stk->capacity * sizeof(TYPE));
+    p_stk->datahash  = hash(p_stk->data, p_stk->capacity * sizeof(TYPE));
     p_stk->stackhash = hash(p_stk, TEMPLATE(StackSizeForHash, TYPE) (p_stk));
 #endif // HASH_PROTECT
 
@@ -339,11 +339,11 @@ static error_t TEMPLATE(StackDestruct, TYPE) (TEMPLATE(stack, TYPE)* p_stk)
 #endif // CANARY_PROTECT
 
 #ifdef HASH_PROTECT
-    p_stk->datahash = 0;
+    p_stk->datahash  = 0;
     p_stk->stackhash = 0;
 #endif // HASH_PROTECT
 
-    p_stk->data = nullptr;
+    p_stk->data    = nullptr;
     p_stk->errCode = STACK_DESTRUCTED;
 
     return OK;
@@ -360,6 +360,7 @@ static error_t TEMPLATE(StackPush, TYPE) (TEMPLATE(stack, TYPE)* p_stk, TYPE val
         if (TEMPLATE(StackExpand, TYPE) (p_stk) == NO_MEMORY)
         {
             printf(errstr[NO_MEMORY + 1]);
+            DUMP_PRINT{ TEMPLATE(StackDump, TYPE) (p_stk, __FUNCTION__); }
 
             p_stk->errCode = OK;
             return NO_MEMORY;
@@ -375,7 +376,7 @@ static error_t TEMPLATE(StackPush, TYPE) (TEMPLATE(stack, TYPE)* p_stk, TYPE val
 #endif // CANARY_PROTECT
 
 #ifdef HASH_PROTECT
-    p_stk->datahash = hash(p_stk->data, p_stk->capacity * sizeof(TYPE));
+    p_stk->datahash  = hash(p_stk->data, p_stk->capacity * sizeof(TYPE));
     p_stk->stackhash = hash(p_stk, TEMPLATE(StackSizeForHash, TYPE) (p_stk));
 #endif // HASH_PROTECT
 
@@ -395,8 +396,15 @@ static TYPE TEMPLATE(StackPop, TYPE) (TEMPLATE(stack, TYPE)* p_stk)
     if (p_stk->errCode == EMPTY_STACK)
     {
         printf(errstr[EMPTY_STACK + 1]);
+        DUMP_PRINT{ TEMPLATE(StackDump, TYPE) (p_stk, __FUNCTION__); }
 
         p_stk->errCode = OK;
+
+#ifdef HASH_PROTECT
+        p_stk->datahash  = hash(p_stk->data, p_stk->capacity * sizeof(TYPE));
+        p_stk->stackhash = hash(p_stk, TEMPLATE(StackSizeForHash, TYPE) (p_stk));
+#endif // HASH_PROTECT
+
         return TEMPLATE(TYPE, POISON);
     }
 
@@ -411,7 +419,7 @@ static TYPE TEMPLATE(StackPop, TYPE) (TEMPLATE(stack, TYPE)* p_stk)
 #endif // CANARY_PROTECT
 
 #ifdef HASH_PROTECT
-    p_stk->datahash = hash(p_stk->data, p_stk->capacity * sizeof(TYPE));
+    p_stk->datahash  = hash(p_stk->data, p_stk->capacity * sizeof(TYPE));
     p_stk->stackhash = hash(p_stk, TEMPLATE(StackSizeForHash, TYPE) (p_stk));
 #endif // HASH_PROTECT
 
@@ -505,7 +513,7 @@ static error_t TEMPLATE(StackDump, TYPE) (TEMPLATE(stack, TYPE)* p_stk, const ch
     SYSTEMTIME localtime = {};
     GetLocalTime(&localtime);
 
-    fprintf(fp, "TIME: %d-%02d-%02d %02d:%02d:%02d.%03d\n\n",
+    fprintf(fp, "TIME: %d-%02d-%02d %02d:%02d:%02d.%03d\n",
         localtime.wYear,
         localtime.wMonth,
         localtime.wDay,
@@ -516,7 +524,7 @@ static error_t TEMPLATE(StackDump, TYPE) (TEMPLATE(stack, TYPE)* p_stk, const ch
 
     if (p_stk == nullptr)
     {
-        fprintf(fp, "Stack (ERROR) [0x%p] \"unidentified stack\"\n", p_stk);
+        fprintf(fp, "\nStack (ERROR) [0x%p] \"unidentified stack\"\n", p_stk);
         fprintf(fp, errstr[NULL_STACK_PTR + 1]);
 
         fprintf(fp, "%s\n", divline);
@@ -525,13 +533,13 @@ static error_t TEMPLATE(StackDump, TYPE) (TEMPLATE(stack, TYPE)* p_stk, const ch
         return OK;
     }
 
-    if ((p_stk->errCode == NOT_CONSTRUCTED) ||
-        (p_stk->errCode == STACK_DESTRUCTED) ||
-        (p_stk->errCode == NULL_DATA_PTR) ||
+    if ((p_stk->errCode == NOT_CONSTRUCTED)      ||
+        (p_stk->errCode == STACK_DESTRUCTED)     ||
+        (p_stk->errCode == NULL_DATA_PTR)        ||
         (p_stk->errCode == SIZE_BIGGER_CAPACITY) ||
         (p_stk->errCode == CAPACITY_WRONG_VALUE))
     {
-        fprintf(fp, "Stack (ERROR) [0x%p] \"%s\" id (%d)\n", p_stk, p_stk->name, p_stk->id);
+        fprintf(fp, "\nStack (ERROR) [0x%p] \"%s\" id (%d)\n", p_stk, p_stk->name, p_stk->id);
         TEMPLATE(printError, TYPE) (p_stk, fp);
 
         fprintf(fp, "%s\n", divline);
@@ -550,52 +558,52 @@ static error_t TEMPLATE(StackDump, TYPE) (TEMPLATE(stack, TYPE)* p_stk, const ch
         TEMPLATE(printError, TYPE) (p_stk, fp);
     }
 
-    fprintf(fp, "Stack (%s) [0x%p] \"%s\", id (%d)\n", StkState, p_stk, p_stk->name, p_stk->id);
-    fprintf(fp, "\t{\n");
+    fprintf(fp, "\nStack (%s) [0x%p] \"%s\", id (%d)\n", StkState, p_stk, p_stk->name, p_stk->id);
+        fprintf(fp, "\t{\n");
 
-    fprintf(fp, "\tType of data is %s\n\n", TEMPLATE(TYPE, PRINT_TYPE));
+        fprintf(fp, "\tType of data is %s\n\n", TEMPLATE(TYPE, PRINT_TYPE));
 
-    fprintf(fp, "\tCapacity           = %u\n", p_stk->capacity);
-    fprintf(fp, "\tCurrent size       = %u\n\n", p_stk->size_cur);
+        fprintf(fp, "\tCapacity           = %u\n", p_stk->capacity);
+        fprintf(fp, "\tCurrent size       = %u\n\n", p_stk->size_cur);
 
 #ifdef CANARY_PROTECT
-    fprintf(fp, "\tCanary stack 1     = " CAN_PRINT_FORMAT "\n", p_stk->canary1);
-    fprintf(fp, "\tCanary stack 2     = " CAN_PRINT_FORMAT "\n\n", p_stk->canary2);
+        fprintf(fp, "\tCanary stack 1     = " CAN_PRINT_FORMAT "\n", p_stk->canary1);
+        fprintf(fp, "\tCanary stack 2     = " CAN_PRINT_FORMAT "\n\n", p_stk->canary2);
 #endif // CANARY_PROTECT
 
 #ifdef HASH_PROTECT
-    fprintf(fp, "\tStack hash         = 0x" HASH_PRINT_FORMAT "\n", p_stk->stackhash);
-    fprintf(fp, "\tData hash          = 0x" HASH_PRINT_FORMAT "\n\n", p_stk->datahash);
+        fprintf(fp, "\tStack hash         = 0x" HASH_PRINT_FORMAT "\n", p_stk->stackhash);
+        fprintf(fp, "\tData hash          = 0x" HASH_PRINT_FORMAT "\n\n", p_stk->datahash);
 
-    if (p_stk->errCode)
-    {
-        fprintf(fp, "\tTrue stack hash    = 0x" HASH_PRINT_FORMAT "\n", hash(p_stk, TEMPLATE(StackSizeForHash, TYPE) (p_stk)));
-        fprintf(fp, "\tTrue data hash     = 0x" HASH_PRINT_FORMAT "\n\n", hash(p_stk->data, p_stk->capacity * sizeof(TYPE)));
-    }
+        if (p_stk->errCode)
+        {
+            fprintf(fp, "\tTrue stack hash    = 0x" HASH_PRINT_FORMAT "\n", hash(p_stk, TEMPLATE(StackSizeForHash, TYPE) (p_stk)));
+            fprintf(fp, "\tTrue data hash     = 0x" HASH_PRINT_FORMAT "\n\n", hash(p_stk->data, p_stk->capacity * sizeof(TYPE)));
+        }
 #endif // HASH_PROTECT
 
-    fprintf(fp, "\tData [0x%p]\n", p_stk->data);
-    fprintf(fp, "\t\t{\n");
+        fprintf(fp, "\tData [0x%p]\n", p_stk->data);
+            fprintf(fp, "\t\t{\n");
 
 #ifdef CANARY_PROTECT
-    fprintf(fp, "\t\tCanary data 1: " CAN_PRINT_FORMAT "\n", ((can_t*)p_stk->data)[-1]);
+            fprintf(fp, "\t\tCanary data 1: " CAN_PRINT_FORMAT "\n", ((can_t*)p_stk->data)[-1]);
 #endif // CANARY_PROTECT
 
-    for (int i = 0; i < p_stk->capacity; i++)
-    {
-        if (!(TEMPLATE(isPOISON, TYPE) (p_stk->data[i])))
-            fprintf(fp, "\t\t*[%d]: " TEMPLATE(TYPE, PRINT_FORMAT) "\n", i, p_stk->data[i]);
-        else
-            fprintf(fp, "\t\t [%d]: " TEMPLATE(TYPE, PRINT_FORMAT) " (POISON)\n", i, p_stk->data[i]);
-    }
+            for (int i = 0; i < p_stk->capacity; i++)
+            {
+                if (!(TEMPLATE(isPOISON, TYPE) (p_stk->data[i])))
+                    fprintf(fp, "\t\t*[%d]: " TEMPLATE(TYPE, PRINT_FORMAT) "\n", i, p_stk->data[i]);
+                else
+                    fprintf(fp, "\t\t [%d]: " TEMPLATE(TYPE, PRINT_FORMAT) " (POISON)\n", i, p_stk->data[i]);
+            }
 
 #ifdef CANARY_PROTECT
-    fprintf(fp, "\t\tCanary data 2: " CAN_PRINT_FORMAT "\n", ((can_t*)p_stk->data)[p_stk->capacity * sizeof(TYPE) / sizeof(can_t)]);
+            fprintf(fp, "\t\tCanary data 2: " CAN_PRINT_FORMAT "\n", ((can_t*)p_stk->data)[p_stk->capacity * sizeof(TYPE) / sizeof(can_t)]);
 #endif // CANARY_PROTECT
 
-    fprintf(fp, "\t\t}\n");
+            fprintf(fp, "\t\t}\n");
 
-    fprintf(fp, "\t}\n");
+        fprintf(fp, "\t}\n");
 
     fprintf(fp, "%s\n", divline);
     fclose(fp);
@@ -647,6 +655,12 @@ static error_t TEMPLATE(StackCheck, TYPE) (TEMPLATE(stack, TYPE)* p_stk, const c
     if ((p_stk->size_cur == 0) && (funcname == "StackPop_" TEMPLATE(TYPE, PRINT_TYPE)))
     {
         p_stk->errCode = EMPTY_STACK;
+
+#ifdef HASH_PROTECT
+        p_stk->datahash  = hash(p_stk->data, p_stk->capacity * sizeof(TYPE));
+        p_stk->stackhash = hash(p_stk, TEMPLATE(StackSizeForHash, TYPE) (p_stk));
+#endif // HASH_PROTECT
+
         return OK;
     }
 
