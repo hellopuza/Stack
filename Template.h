@@ -5,4 +5,3 @@
 #define TEMPLATE(X,Y) CAT(X,Y)
 
 #endif // TEMPLATE_H_INCLUDED
-

@@ -7,6 +7,7 @@
     * Email:       puzankov.ao@phystech.edu                                    *
 *///----------------------------------------------------------------------------
 
+#include "hash.h"
 
 int bit_rotate(void* buf, size_t size, int dir)
 {
@@ -143,4 +144,3 @@ hash_t hash(void* buf, size_t size)
 }
 
 //------------------------------------------------------------------------------
-

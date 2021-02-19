@@ -57,6 +57,8 @@ static can_t canaries[MAX_STACK_NUM] = {};
 
 #endif //CANARY_PROTECT
 
+#ifndef ERRORS_DEFINED
+#define ERRORS_DEFINED
 
 enum Errors
 {
@@ -94,5 +96,6 @@ static const char* errstr[] =
     "\nBad size stack capacity\n\n"                                 ,
 };
 
-#endif // STACK_CONFIG_H_DEFINED
+#endif // ERRORS_DEFINED
 
+#endif // STACK_CONFIG_H_DEFINED
