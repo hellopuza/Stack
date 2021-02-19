@@ -201,7 +201,7 @@ static void TEMPLATE(printError, TYPE) (TEMPLATE(stack, TYPE)* p_stk, FILE* fp);
 //------------------------------------------------------------------------------
 /*! @brief   Change canary (if enabled)
  *
- *  @param   canary      Ñanary input
+ *  @param   canary      Canary input
  *
  *  @return  changed canary
  */
