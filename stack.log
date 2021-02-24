@@ -1,22 +1,22 @@
 This dump was called from a function _StackConstruct_double
-TIME: 2021-02-20 01:43:48.311
+TIME: 2021-02-24 20:58:20.380
 
-Stack (OK) [0x006FF93C] "stk", id (0)
+Stack (OK) [0x008FF7C4] "stk", id (0)
 	{
 	Type of data is double
 
 	Capacity           = 8
 	Current size       = 0
 
-	Canary stack 1     = 56206
-	Canary stack 2     = 56206
+	Canary stack 1     = 26895
+	Canary stack 2     = 26895
 
-	Stack hash         = 0x8891C3F4339E7FFC
+	Stack hash         = 0x3FD8F9C303BA5D18
 	Data hash          = 0x846985A8A4F0A68C
 
-	Data [0x00B76260]
+	Data [0x00C86260]
 		{
-		Canary data 1: 56206
+		Canary data 1: 26895
 		 [0]: -nan(ind) (POISON)
 		 [1]: -nan(ind) (POISON)
 		 [2]: -nan(ind) (POISON)
@@ -25,29 +25,29 @@ Stack (OK) [0x006FF93C] "stk", id (0)
 		 [5]: -nan(ind) (POISON)
 		 [6]: -nan(ind) (POISON)
 		 [7]: -nan(ind) (POISON)
-		Canary data 2: 56206
+		Canary data 2: 26895
 		}
 	}
 ********************************************************************************
 This dump was called from a function _StackConstruct_int
-TIME: 2021-02-20 01:43:48.312
+TIME: 2021-02-24 20:58:20.381
 
-Stack (OK) [0x006FF8FC] "stk2", id (1)
+Stack (OK) [0x008FF784] "stk2", id (1)
 	{
 	Type of data is int
 
 	Capacity           = 8
 	Current size       = 0
 
-	Canary stack 1     = 112412
-	Canary stack 2     = 112412
+	Canary stack 1     = 21734
+	Canary stack 2     = 21734
 
-	Stack hash         = 0x58E3C390D23DB1CE
+	Stack hash         = 0xC750366B34E835F5
 	Data hash          = 0x1D6D17ACC9F03C73
 
-	Data [0x00B7FC48]
+	Data [0x00C8FC48]
 		{
-		Canary data 1: 112412
+		Canary data 1: 21734
 		 [0]: 2147483647 (POISON)
 		 [1]: 2147483647 (POISON)
 		 [2]: 2147483647 (POISON)
@@ -56,29 +56,29 @@ Stack (OK) [0x006FF8FC] "stk2", id (1)
 		 [5]: 2147483647 (POISON)
 		 [6]: 2147483647 (POISON)
 		 [7]: 2147483647 (POISON)
-		Canary data 2: 112412
+		Canary data 2: 21734
 		}
 	}
 ********************************************************************************
 This dump was called from a function StackPush_double
-TIME: 2021-02-20 01:43:48.313
+TIME: 2021-02-24 20:58:20.383
 
-Stack (OK) [0x006FF93C] "stk", id (0)
+Stack (OK) [0x008FF7C4] "stk", id (0)
 	{
 	Type of data is double
 
 	Capacity           = 8
 	Current size       = 1
 
-	Canary stack 1     = 118287
-	Canary stack 2     = 118287
+	Canary stack 1     = 56053
+	Canary stack 2     = 56053
 
-	Stack hash         = 0x1FD2B6BE0F95B50F
+	Stack hash         = 0x022C756C975A2998
 	Data hash          = 0x98352995256BA974
 
-	Data [0x00B76260]
+	Data [0x00C86260]
 		{
-		Canary data 1: 118287
+		Canary data 1: 56053
 		*[0]: 10.100000
 		 [1]: -nan(ind) (POISON)
 		 [2]: -nan(ind) (POISON)
@@ -87,29 +87,29 @@ Stack (OK) [0x006FF93C] "stk", id (0)
 		 [5]: -nan(ind) (POISON)
 		 [6]: -nan(ind) (POISON)
 		 [7]: -nan(ind) (POISON)
-		Canary data 2: 118287
+		Canary data 2: 56053
 		}
 	}
 ********************************************************************************
 This dump was called from a function StackPush_double
-TIME: 2021-02-20 01:43:48.315
+TIME: 2021-02-24 20:58:20.384
 
-Stack (OK) [0x006FF93C] "stk", id (0)
+Stack (OK) [0x008FF7C4] "stk", id (0)
 	{
 	Type of data is double
 
 	Capacity           = 8
 	Current size       = 2
 
-	Canary stack 1     = 248436
-	Canary stack 2     = 248436
+	Canary stack 1     = 112106
+	Canary stack 2     = 112106
 
-	Stack hash         = 0xE1A538B800CF45E6
+	Stack hash         = 0xB9E95F1DB9E69531
 	Data hash          = 0xCAFB6F69A8C0DA44
 
-	Data [0x00B76260]
+	Data [0x00C86260]
 		{
-		Canary data 1: 248436
+		Canary data 1: 112106
 		*[0]: 10.100000
 		*[1]: -12.200000
 		 [2]: -nan(ind) (POISON)
@@ -118,29 +118,29 @@ Stack (OK) [0x006FF93C] "stk", id (0)
 		 [5]: -nan(ind) (POISON)
 		 [6]: -nan(ind) (POISON)
 		 [7]: -nan(ind) (POISON)
-		Canary data 2: 248436
+		Canary data 2: 112106
 		}
 	}
 ********************************************************************************
 This dump was called from a function StackPush_double
-TIME: 2021-02-20 01:43:48.316
+TIME: 2021-02-24 20:58:20.385
 
-Stack (OK) [0x006FF93C] "stk", id (0)
+Stack (OK) [0x008FF7C4] "stk", id (0)
 	{
 	Type of data is double
 
 	Capacity           = 8
 	Current size       = 3
 
-	Canary stack 1     = 496872
-	Canary stack 2     = 496872
+	Canary stack 1     = 210316
+	Canary stack 2     = 210316
 
-	Stack hash         = 0x1D71E1D067DDBC9B
+	Stack hash         = 0xF909D6CCDF98CF0A
 	Data hash          = 0x35B5F9795F1BB02B
 
-	Data [0x00B76260]
+	Data [0x00C86260]
 		{
-		Canary data 1: 496872
+		Canary data 1: 210316
 		*[0]: 10.100000
 		*[1]: -12.200000
 		*[2]: 0.112255
@@ -149,29 +149,29 @@ Stack (OK) [0x006FF93C] "stk", id (0)
 		 [5]: -nan(ind) (POISON)
 		 [6]: -nan(ind) (POISON)
 		 [7]: -nan(ind) (POISON)
-		Canary data 2: 496872
+		Canary data 2: 210316
 		}
 	}
 ********************************************************************************
 This dump was called from a function StackPush_double
-TIME: 2021-02-20 01:43:48.317
+TIME: 2021-02-24 20:58:20.386
 
-Stack (OK) [0x006FF93C] "stk", id (0)
+Stack (OK) [0x008FF7C4] "stk", id (0)
 	{
 	Type of data is double
 
 	Capacity           = 8
 	Current size       = 4
 
-	Canary stack 1     = 993744
-	Canary stack 2     = 993744
+	Canary stack 1     = 404809
+	Canary stack 2     = 404809
 
-	Stack hash         = 0xFE5E0A4A18945C94
+	Stack hash         = 0xDAB456583AA3D0F1
 	Data hash          = 0x799FD26046A933B7
 
-	Data [0x00B76260]
+	Data [0x00C86260]
 		{
-		Canary data 1: 993744
+		Canary data 1: 404809
 		*[0]: 10.100000
 		*[1]: -12.200000
 		*[2]: 0.112255
@@ -180,29 +180,29 @@ Stack (OK) [0x006FF93C] "stk", id (0)
 		 [5]: -nan(ind) (POISON)
 		 [6]: -nan(ind) (POISON)
 		 [7]: -nan(ind) (POISON)
-		Canary data 2: 993744
+		Canary data 2: 404809
 		}
 	}
 ********************************************************************************
 This dump was called from a function StackPush_double
-TIME: 2021-02-20 01:43:48.318
+TIME: 2021-02-24 20:58:20.386
 
-Stack (OK) [0x006FF93C] "stk", id (0)
+Stack (OK) [0x008FF7C4] "stk", id (0)
 	{
 	Type of data is double
 
 	Capacity           = 8
 	Current size       = 5
 
-	Canary stack 1     = 1991879
-	Canary stack 2     = 1991879
+	Canary stack 1     = 798927
+	Canary stack 2     = 798927
 
-	Stack hash         = 0x682D39CF4E54A160
+	Stack hash         = 0xE6F473C0A603294C
 	Data hash          = 0xE01AED60D44FFEB4
 
-	Data [0x00B76260]
+	Data [0x00C86260]
 		{
-		Canary data 1: 1991879
+		Canary data 1: 798927
 		*[0]: 10.100000
 		*[1]: -12.200000
 		*[2]: 0.112255
@@ -211,29 +211,29 @@ Stack (OK) [0x006FF93C] "stk", id (0)
 		 [5]: -nan(ind) (POISON)
 		 [6]: -nan(ind) (POISON)
 		 [7]: -nan(ind) (POISON)
-		Canary data 2: 1991879
+		Canary data 2: 798927
 		}
 	}
 ********************************************************************************
 This dump was called from a function StackPush_double
-TIME: 2021-02-20 01:43:48.318
+TIME: 2021-02-24 20:58:20.387
 
-Stack (OK) [0x006FF93C] "stk", id (0)
+Stack (OK) [0x008FF7C4] "stk", id (0)
 	{
 	Type of data is double
 
 	Capacity           = 8
 	Current size       = 6
 
-	Canary stack 1     = 3964233
-	Canary stack 2     = 3964233
+	Canary stack 1     = 1605512
+	Canary stack 2     = 1605512
 
-	Stack hash         = 0x426D0E234440861D
+	Stack hash         = 0xF9F759065265395D
 	Data hash          = 0x1386EAC060093D7A
 
-	Data [0x00B76260]
+	Data [0x00C86260]
 		{
-		Canary data 1: 3964233
+		Canary data 1: 1605512
 		*[0]: 10.100000
 		*[1]: -12.200000
 		*[2]: 0.112255
@@ -242,29 +242,29 @@ Stack (OK) [0x006FF93C] "stk", id (0)
 		*[5]: 10.300000
 		 [6]: -nan(ind) (POISON)
 		 [7]: -nan(ind) (POISON)
-		Canary data 2: 3964233
+		Canary data 2: 1605512
 		}
 	}
 ********************************************************************************
 This dump was called from a function StackPush_double
-TIME: 2021-02-20 01:43:48.319
+TIME: 2021-02-24 20:58:20.388
 
-Stack (OK) [0x006FF93C] "stk", id (0)
+Stack (OK) [0x008FF7C4] "stk", id (0)
 	{
 	Type of data is double
 
 	Capacity           = 8
 	Current size       = 7
 
-	Canary stack 1     = 7959316
-	Canary stack 2     = 7959316
+	Canary stack 1     = 3211024
+	Canary stack 2     = 3211024
 
-	Stack hash         = 0x1C0003FEBAC292BD
+	Stack hash         = 0xEB14959BC4E2944D
 	Data hash          = 0xAD96352FC0211D18
 
-	Data [0x00B76260]
+	Data [0x00C86260]
 		{
-		Canary data 1: 7959316
+		Canary data 1: 3211024
 		*[0]: 10.100000
 		*[1]: -12.200000
 		*[2]: 0.112255
@@ -273,29 +273,29 @@ Stack (OK) [0x006FF93C] "stk", id (0)
 		*[5]: 10.300000
 		*[6]: -12.250000
 		 [7]: -nan(ind) (POISON)
-		Canary data 2: 7959316
+		Canary data 2: 3211024
 		}
 	}
 ********************************************************************************
 This dump was called from a function StackPush_double
-TIME: 2021-02-20 01:43:48.320
+TIME: 2021-02-24 20:58:20.389
 
-Stack (OK) [0x006FF93C] "stk", id (0)
+Stack (OK) [0x008FF7C4] "stk", id (0)
 	{
 	Type of data is double
 
 	Capacity           = 16
 	Current size       = 8
 
-	Canary stack 1     = 15949072
-	Canary stack 2     = 15949072
+	Canary stack 1     = 6427264
+	Canary stack 2     = 6427264
 
-	Stack hash         = 0x469CAFE8F489D78C
+	Stack hash         = 0x8B284AA4D2479A5D
 	Data hash          = 0xAA0187649B5D69AE
 
-	Data [0x00B80568]
+	Data [0x00C90568]
 		{
-		Canary data 1: 15949072
+		Canary data 1: 6427264
 		*[0]: 10.100000
 		*[1]: -12.200000
 		*[2]: 0.112255
@@ -312,29 +312,29 @@ Stack (OK) [0x006FF93C] "stk", id (0)
 		 [13]: -nan(ind) (POISON)
 		 [14]: -nan(ind) (POISON)
 		 [15]: -nan(ind) (POISON)
-		Canary data 2: 15949072
+		Canary data 2: 6427264
 		}
 	}
 ********************************************************************************
 This dump was called from a function StackPop_double
-TIME: 2021-02-20 01:43:48.321
+TIME: 2021-02-24 20:58:20.390
 
-Stack (OK) [0x006FF93C] "stk", id (0)
+Stack (OK) [0x008FF7C4] "stk", id (0)
 	{
 	Type of data is double
 
 	Capacity           = 16
 	Current size       = 7
 
-	Canary stack 1     = 31888581
-	Canary stack 2     = 31888581
+	Canary stack 1     = 12830840
+	Canary stack 2     = 12830840
 
-	Stack hash         = 0xE1789458C56EFA9A
+	Stack hash         = 0xC945F24DACDEE1CA
 	Data hash          = 0xDDAA40A1C4561A12
 
-	Data [0x00B80568]
+	Data [0x00C90568]
 		{
-		Canary data 1: 31888581
+		Canary data 1: 12830840
 		*[0]: 10.100000
 		*[1]: -12.200000
 		*[2]: 0.112255
@@ -351,29 +351,29 @@ Stack (OK) [0x006FF93C] "stk", id (0)
 		 [13]: -nan(ind) (POISON)
 		 [14]: -nan(ind) (POISON)
 		 [15]: -nan(ind) (POISON)
-		Canary data 2: 31888581
+		Canary data 2: 12830840
 		}
 	}
 ********************************************************************************
 This dump was called from a function StackPop_double
-TIME: 2021-02-20 01:43:48.322
+TIME: 2021-02-24 20:58:20.390
 
-Stack (OK) [0x006FF93C] "stk", id (0)
+Stack (OK) [0x008FF7C4] "stk", id (0)
 	{
 	Type of data is double
 
 	Capacity           = 16
 	Current size       = 6
 
-	Canary stack 1     = 63777162
-	Canary stack 2     = 63777162
+	Canary stack 1     = 25661680
+	Canary stack 2     = 25661680
 
-	Stack hash         = 0xBBF10B080148C912
+	Stack hash         = 0xBC5CDDD2F2E8D67B
 	Data hash          = 0x55218095193D61EE
 
-	Data [0x00B80568]
+	Data [0x00C90568]
 		{
-		Canary data 1: 63777162
+		Canary data 1: 25661680
 		*[0]: 10.100000
 		*[1]: -12.200000
 		*[2]: 0.112255
@@ -390,36 +390,36 @@ Stack (OK) [0x006FF93C] "stk", id (0)
 		 [13]: -nan(ind) (POISON)
 		 [14]: -nan(ind) (POISON)
 		 [15]: -nan(ind) (POISON)
-		Canary data 2: 63777162
+		Canary data 2: 25661680
 		}
 	}
 ********************************************************************************
-ERROR: file C:\Users\admin\Documents\Visual Studio 2019\Projects\Stack\Stack\Stack.h  line 394  function StackPop_double
+ERROR: file C:\Users\admin\Documents\Visual Studio 2019\Projects\Stack\Stack\Stack.h  line 401  function StackPop_double
 
 This dump was called from a function StackPop_double
-TIME: 2021-02-20 01:43:48.323
+TIME: 2021-02-24 20:58:20.391
 
 Stack cracked, hash corrupted
 
-Stack (ERROR) [0x006FF93C] "stk", id (0)
+Stack (ERROR) [0x008FF7C4] "stk", id (0)
 	{
 	Type of data is double
 
 	Capacity           = 16
 	Current size       = 2
 
-	Canary stack 1     = 63777162
-	Canary stack 2     = 63777162
+	Canary stack 1     = 25661680
+	Canary stack 2     = 25661680
 
-	Stack hash         = 0xBBF10B080148C912
+	Stack hash         = 0xBC5CDDD2F2E8D67B
 	Data hash          = 0x55218095193D61EE
 
-	True stack hash    = 0x0EC5A06E23D4D6E9
+	True stack hash    = 0x99D64E26DC9333F6
 	True data hash     = 0x55218095193D61EE
 
-	Data [0x00B80568]
+	Data [0x00C90568]
 		{
-		Canary data 1: 63777162
+		Canary data 1: 25661680
 		*[0]: 10.100000
 		*[1]: -12.200000
 		*[2]: 0.112255
@@ -436,7 +436,7 @@ Stack (ERROR) [0x006FF93C] "stk", id (0)
 		 [13]: -nan(ind) (POISON)
 		 [14]: -nan(ind) (POISON)
 		 [15]: -nan(ind) (POISON)
-		Canary data 2: 63777162
+		Canary data 2: 25661680
 		}
 	}
 ********************************************************************************
