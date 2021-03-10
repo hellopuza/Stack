@@ -1,11 +1,13 @@
 /*------------------------------------------------------------------------------
     * File:        Stack.h                                                     *
-    * Description: Main stack functions                                        *
+    * Description: Stack library. You have to define stack TYPE before         *
+                   including this file.                                        *
     * Created:     1 dec 2020                                                  *
     * Copyright:   (C) 2020 MIPT                                               *
     * Author:      Artem Puzankov                                              *
     * Email:       puzankov.ao@phystech.edu                                    *
-*///----------------------------------------------------------------------------
+    * GitHub:      https://github.com/hellopuza                                *
+    *///------------------------------------------------------------------------
 
 #define _CRT_SECURE_NO_WARNINGS
 //#define NDEBUG
@@ -23,22 +25,30 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
+#include <time.h>
 
 #ifdef HASH_PROTECT
 #include "hash.h"
 #endif // HASH_PROTECT
 
 
-#define ASSERTOK(p_stk) if (TEMPLATE(StackCheck, TYPE) (p_stk, __FUNCTION__))                                         \
-                        {                                                                                             \
-                          FILE* log = fopen(logname, "a");                                                            \
-                          assert (log != nullptr);                                                                    \
-                          fprintf(log, "ERROR: file %s  line %d  function %s\n\n", __FILE__, __LINE__, __FUNCTION__); \
-                          printf (     "ERROR: file %s  line %d  function %s\n",   __FILE__, __LINE__, __FUNCTION__); \
-                          fclose(log);                                                                                \
-                          TEMPLATE(StackDump, TYPE) (p_stk, __FUNCTION__, logname);                                   \
-                          exit(p_stk->errCode); /**/                                                                  \
-                        }
+#define STACK_CHECK(p_stk) if (TEMPLATE(StackCheck, TYPE) (p_stk, __FUNCTION__))                                         \
+                           {                                                                                             \
+                             FILE* log = fopen(stack_logname, "a");                                                      \
+                             assert (log != nullptr);                                                                    \
+                             fprintf(log, "ERROR: file %s  line %d  function %s\n\n", __FILE__, __LINE__, __FUNCTION__); \
+                             printf (     "ERROR: file %s  line %d  function %s\n",   __FILE__, __LINE__, __FUNCTION__); \
+                             fclose(log);                                                                                \
+                             TEMPLATE(StackDump, TYPE) (p_stk, __FUNCTION__, stack_logname);                             \
+                             exit(p_stk->errCode); /**/                                                                  \
+                           }
+
+
+#define STACK_ASSERTOK(cond, err) if (cond)                                                                             \
+                                  {                                                                                     \
+                                    TEMPLATE(printError, TYPE) (stack_logname , __FILE__, __LINE__, __FUNCTION__, err); \
+                                    exit(err); /**/                                                                     \
+                                  }
 
 
 #ifndef STACK_ID
@@ -59,8 +69,10 @@ static char* stack_name = nullptr;
 
 typedef struct TEMPLATE(Stack, TYPE)
 {
-//////////////TRY-TO-HACK///////////////
+///////////////TRY-TO-HACK///////////////
+#ifdef CANARY_PROTECT
     can_t canary1;
+#endif //CANARY_PROTECT
 
     size_t  capacity;
     size_t  size_cur;
@@ -68,7 +80,7 @@ typedef struct TEMPLATE(Stack, TYPE)
 
     TYPE* data;
 
-    int errCode = NOT_CONSTRUCTED;
+    int errCode = STACK_NOT_CONSTRUCTED;
     int id;
 
 #ifdef HASH_PROTECT
@@ -76,8 +88,10 @@ typedef struct TEMPLATE(Stack, TYPE)
     hash_t datahash;
 #endif // HASH_PROTECT
 
+#ifdef CANARY_PROTECT
     can_t canary2;
-//////////////TRY-TO-HACK///////////////
+#endif //CANARY_PROTECT
+///////////////TRY-TO-HACK///////////////
 } TEMPLATE(stack, TYPE);
 
 
@@ -88,42 +102,42 @@ typedef struct TEMPLATE(Stack, TYPE)
 //==============================================================================
 
 //------------------------------------------------------------------------------
-/*! @brief   Stack constructor
+/*! @brief   Stack constructor.
  *
- *  @param   p_stk       Pointer to stack
- *  @param   capacity    Capacity of stack
+ *  @param   p_stk       Pointer to the stack
+ *  @param   capacity    Capacity of the stack
  *  @param   stack_name  Stack variable name
  *
- *  @return  code error
+ *  @return  error code
  */
 
-static error_t TEMPLATE(_StackConstruct, TYPE) (TEMPLATE(stack, TYPE)* p_stk, size_t capacity, char* stack_name);
+static int TEMPLATE(_StackConstruct, TYPE) (TEMPLATE(stack, TYPE)* p_stk, size_t capacity, char* stack_name);
 
 //------------------------------------------------------------------------------
-/*! @brief   Stack destructor
+/*! @brief   Stack destructor.
  *
- *  @param   p_stk       Pointer to stack
+ *  @param   p_stk       Pointer to the stack
  *
- *  @return  code error
+ *  @return  error code
  */
 
-static error_t TEMPLATE(StackDestruct, TYPE) (TEMPLATE(stack, TYPE)* p_stk);
+static int TEMPLATE(StackDestruct, TYPE) (TEMPLATE(stack, TYPE)* p_stk);
 
 //------------------------------------------------------------------------------
-/*! @brief   Pushing a value onto the stack
+/*! @brief   Pushing a value onto the stack.
  *
- *  @param   p_stk       Pointer to stack
+ *  @param   p_stk       Pointer to the stack
  *  @param   value       Value to push
  *
- *  @return  code error
+ *  @return  error code
  */
 
-static error_t TEMPLATE(StackPush, TYPE) (TEMPLATE(stack, TYPE)* p_stk, TYPE value);
+static int TEMPLATE(StackPush, TYPE) (TEMPLATE(stack, TYPE)* p_stk, TYPE value);
 
 //------------------------------------------------------------------------------
-/*! @brief   Popping from stack
+/*! @brief   Popping from stack.
  *
- *  @param   p_stk       Pointer to stack
+ *  @param   p_stk       Pointer to the stack
  *
  *  @return  value from the stack if present, otherwise POISON
  */
@@ -131,17 +145,17 @@ static error_t TEMPLATE(StackPush, TYPE) (TEMPLATE(stack, TYPE)* p_stk, TYPE val
 static TYPE TEMPLATE(StackPop, TYPE) (TEMPLATE(stack, TYPE)* p_stk);
 
 //------------------------------------------------------------------------------
-/*! @brief   Filling the data stack with POISON
+/*! @brief   Filling the stack data with POISON.
  *
- *  @param   p_stk       Pointer to stack
+ *  @param   p_stk       Pointer to the stack
  */
 
 static void TEMPLATE(StackPoison, TYPE) (TEMPLATE(stack, TYPE)* p_stk);
 
 //------------------------------------------------------------------------------
-/*! @brief   Check if value is POISON
+/*! @brief   Check if value is POISON.
  *
- *  @param   value       Checked value
+ *  @param   value       Value to be checked
  *
  *  @return 1 if value is POISON, else 0
  */
@@ -149,19 +163,19 @@ static void TEMPLATE(StackPoison, TYPE) (TEMPLATE(stack, TYPE)* p_stk);
 static int TEMPLATE(isPOISON, TYPE) (TYPE value);
 
 //------------------------------------------------------------------------------
-/*! @brief   Increase the stack by 2 times
+/*! @brief   Increase the stack by 2 times.
  *
- *  @param   p_stk       Pointer to stack
+ *  @param   p_stk       Pointer to the stack
  *
  *  @return  error code
  */
 
-static error_t TEMPLATE(StackExpand, TYPE) (TEMPLATE(stack, TYPE)* p_stk);
+static int TEMPLATE(StackExpand, TYPE) (TEMPLATE(stack, TYPE)* p_stk);
 
 //------------------------------------------------------------------------------
-/*! @brief   Calculates the size of the structure stack without hash and second canary
+/*! @brief   Calculates the size of the structure stack without hash and second canary.
  *
- *  @param   p_stk       Pointer to stack
+ *  @param   p_stk       Pointer to the stack
  *
  *  @return  stack size for hash
  */
@@ -169,41 +183,54 @@ static error_t TEMPLATE(StackExpand, TYPE) (TEMPLATE(stack, TYPE)* p_stk);
 static size_t TEMPLATE(StackSizeForHash, TYPE) (TEMPLATE(stack, TYPE)* p_stk);
 
 //------------------------------------------------------------------------------
-/*! @brief   (THE BEST FUNCTION) Print the contents of the stack and its data to the logfile
+/*! @brief   (THE BEST FUNCTION) Print the contents of the stack and its data to the logfile.
  *
- *  @param   p_stk       Pointer to stack
+ *  @param   p_stk       Pointer to the stack
  *  @param   funcname    Name of the function from which the StackDump was called
- *  @param   logname     Name of logfile
+ *  @param   logname     Name of the logfile
  *
  *  @return  error code
  */
 
-static error_t TEMPLATE(StackDump, TYPE) (TEMPLATE(stack, TYPE)* p_stk, const char* funcname = "@some function@", const char* logfile = logname);
+static int TEMPLATE(StackDump, TYPE) (TEMPLATE(stack, TYPE)* p_stk, const char* funcname = "@some function@", const char* logfile = stack_logname);
 
 //------------------------------------------------------------------------------
-/*! @brief   Check stack for problems, canaries, hash (if enabled)
+/*! @brief   Check stack for problems, canaries, hash (if enabled).
  *
- *  @param   p_stk       Pointer to stack
+ *  @param   p_stk       Pointer to the stack
  *  @param   funcname    Name of the function from which the StackCheck was called
  *
  *  @return  error code
  */
 
-static error_t TEMPLATE(StackCheck, TYPE) (TEMPLATE(stack, TYPE)* p_stk, const char* funcname);
+static int TEMPLATE(StackCheck, TYPE) (TEMPLATE(stack, TYPE)* p_stk, const char* funcname);
 
 //------------------------------------------------------------------------------
-/*! @brief   Print information, error summary
+/*! @brief   Print information and error summary to log file and to console.
  *
- *  @param   p_stk       Pointer to stack
- *  @param   fp          Pointer to logfile
+ *  @param   p_stk       Pointer to the stack
+ *  @param   fp          Pointer to the logfile
  *
  *  @return  error code
  */
 
-static void TEMPLATE(printError, TYPE) (TEMPLATE(stack, TYPE)* p_stk, FILE* fp);
+static void TEMPLATE(ErrorPrint, TYPE) (TEMPLATE(stack, TYPE)* p_stk, FILE* fp);
 
 //------------------------------------------------------------------------------
-/*! @brief   Change canary (if enabled)
+/*! @brief   Print error explanations to log file and to console.
+ *
+ *  @param   logname     Name of the log file
+ *  @param   file        Name of the file from which the printError was called
+ *  @param   line        Line of the code from which the printError was called
+ *  @param   function    Name of the function from which the StackCheck was called
+ *
+ *  @return  error code
+ */
+
+static void TEMPLATE(printError, TYPE) (const char* logname, const char* file, int line, const char* function, int err);
+
+//------------------------------------------------------------------------------
+/*! @brief   Change canary (if enabled).
  *
  *  @param   canary      Canary input
  *
@@ -217,9 +244,9 @@ static can_t TEMPLATE(CanaryChange, TYPE) (can_t canary);
 #endif // CANARY_PROTECT
 
 //------------------------------------------------------------------------------
-/*! @brief   Placing canaries in stack (if enabled)
+/*! @brief   Placing canaries in stack (if enabled).
  *
- *  @param   p_stk       Pointer to stack
+ *  @param   p_stk       Pointer to the stack
  */
 
 #ifdef CANARY_PROTECT
@@ -229,9 +256,9 @@ static void TEMPLATE(CanaryPlacing, TYPE) (TEMPLATE(stack, TYPE)* p_stk);
 #endif // CANARY_PROTECT
 
 //------------------------------------------------------------------------------
-/*! @brief   Check stack for canaries (if enabled)
+/*! @brief   Check stack for canaries (if enabled).
  *
- *  @param   p_stk       Pointer to stack
+ *  @param   p_stk       Pointer to the stack
  *  @param   funcname    Name of the function from which the StackCheck was called
  *
  *  @return  OK if all canaries aren't damaged, otherwise NOT_OK
@@ -251,45 +278,16 @@ static int TEMPLATE(CanaryCheck, TYPE) (TEMPLATE(stack, TYPE)* p_stk);
 //==============================================================================
 
 
-static error_t TEMPLATE(_StackConstruct, TYPE) (TEMPLATE(stack, TYPE)* p_stk, size_t capacity, char* stack_name)
+static int TEMPLATE(_StackConstruct, TYPE) (TEMPLATE(stack, TYPE)* p_stk, size_t capacity, char* stack_name)
 {
-    if ((p_stk->errCode != NOT_CONSTRUCTED) && (p_stk->errCode != STACK_DESTRUCTED))
-    {
-        printf("%s\n", errstr[STACK_CONSTRUCTED + 1]);
-
-        return STACK_CONSTRUCTED;
-    }
-    else if (capacity > MAX_CAPACITY)
-    {
-        printf("Wrong capacity value: %d - is too big\n", capacity);
-        printf("impossible to create a stack\n");
-
-        return CAPACITY_WRONG_VALUE;
-    }
-    else if (capacity == 0)
-    {
-        printf("Cannot create stack with capacity 0\n");
-        printf("minimal capacity of stack is 1\n");
-
-        return CAPACITY_WRONG_VALUE;
-    }
-    else if (stack_id == MAX_STACK_NUM)
-    {
-        printf("Cannot create new stack\n");
-        printf("max number of stacks is %u\n", MAX_STACK_NUM);
-
-        return NO_MEMORY;
-    }
+    STACK_ASSERTOK((p_stk == nullptr),                                                                  STACK_NULL_INPUT_STACK_PTR);
+    STACK_ASSERTOK(((p_stk->errCode != STACK_NOT_CONSTRUCTED) && (p_stk->errCode != STACK_DESTRUCTED)), STACK_CONSTRUCTED);
+    STACK_ASSERTOK((capacity > MAX_CAPACITY),                                                           STACK_WRONG_INPUT_CAPACITY_VALUE_BIG);
+    STACK_ASSERTOK((capacity == 0),                                                                     STACK_WRONG_INPUT_CAPACITY_VALUE_NIL);
+    STACK_ASSERTOK((stack_id == MAX_STACK_NUM),                                                         STACK_TOO_MANY_STACKS);
 
     void* temp = calloc(capacity * sizeof(TYPE) + 2 * sizeof(can_t), sizeof(char));
-
-    if (temp == nullptr)
-    {
-        printf("%s\n", errstr[NO_MEMORY + 1]);
-        printf("impossible to create a stack\n");
-
-        return NO_MEMORY;
-    }
+    STACK_ASSERTOK((temp == nullptr), NO_MEMORY);
 
     p_stk->data = (TYPE*)((char*)temp + sizeof(can_t));
 
@@ -316,7 +314,7 @@ static error_t TEMPLATE(_StackConstruct, TYPE) (TEMPLATE(stack, TYPE)* p_stk, si
     p_stk->stackhash = hash(p_stk, TEMPLATE(StackSizeForHash, TYPE) (p_stk));
 #endif // HASH_PROTECT
 
-    ASSERTOK(p_stk);
+    STACK_CHECK(p_stk);
 
     DUMP_PRINT{ TEMPLATE(StackDump, TYPE) (p_stk, __FUNCTION__); }
 
@@ -325,9 +323,9 @@ static error_t TEMPLATE(_StackConstruct, TYPE) (TEMPLATE(stack, TYPE)* p_stk, si
 
 //------------------------------------------------------------------------------
 
-static error_t TEMPLATE(StackDestruct, TYPE) (TEMPLATE(stack, TYPE)* p_stk)
+static int TEMPLATE(StackDestruct, TYPE) (TEMPLATE(stack, TYPE)* p_stk)
 {
-    ASSERTOK(p_stk);
+    STACK_CHECK(p_stk);
 
     p_stk->size_cur = 0;
 
@@ -355,9 +353,9 @@ static error_t TEMPLATE(StackDestruct, TYPE) (TEMPLATE(stack, TYPE)* p_stk)
 
 //------------------------------------------------------------------------------
 
-static error_t TEMPLATE(StackPush, TYPE) (TEMPLATE(stack, TYPE)* p_stk, TYPE value)
+static int TEMPLATE(StackPush, TYPE) (TEMPLATE(stack, TYPE)* p_stk, TYPE value)
 {
-    ASSERTOK(p_stk);
+    STACK_CHECK(p_stk);
 
     if (p_stk->size_cur == p_stk->capacity - 1)
     {
@@ -372,7 +370,7 @@ static error_t TEMPLATE(StackPush, TYPE) (TEMPLATE(stack, TYPE)* p_stk, TYPE val
             p_stk->stackhash = hash(p_stk, TEMPLATE(StackSizeForHash, TYPE) (p_stk));
 #endif // HASH_PROTECT
 
-            return NO_MEMORY;
+            exit(NO_MEMORY);
         }
     }
 
@@ -389,7 +387,7 @@ static error_t TEMPLATE(StackPush, TYPE) (TEMPLATE(stack, TYPE)* p_stk, TYPE val
     p_stk->stackhash = hash(p_stk, TEMPLATE(StackSizeForHash, TYPE) (p_stk));
 #endif // HASH_PROTECT
 
-    ASSERTOK(p_stk);
+    STACK_CHECK(p_stk);
 
     DUMP_PRINT{ TEMPLATE(StackDump, TYPE) (p_stk, __FUNCTION__); }
 
@@ -400,9 +398,9 @@ static error_t TEMPLATE(StackPush, TYPE) (TEMPLATE(stack, TYPE)* p_stk, TYPE val
 
 static TYPE TEMPLATE(StackPop, TYPE) (TEMPLATE(stack, TYPE)* p_stk)
 {
-    ASSERTOK(p_stk);
+    STACK_CHECK(p_stk);
 
-    if (p_stk->errCode == EMPTY_STACK)
+    if (p_stk->errCode == STACK_EMPTY_STACK)
     {
         DUMP_PRINT{ TEMPLATE(StackDump, TYPE) (p_stk, __FUNCTION__); }
 
@@ -462,7 +460,7 @@ static int TEMPLATE(isPOISON, TYPE) (TYPE value)
 
 //------------------------------------------------------------------------------
 
-static error_t TEMPLATE(StackExpand, TYPE) (TEMPLATE(stack, TYPE)* p_stk)
+static int TEMPLATE(StackExpand, TYPE) (TEMPLATE(stack, TYPE)* p_stk)
 {
     assert(p_stk != nullptr);
 
@@ -473,7 +471,7 @@ static error_t TEMPLATE(StackExpand, TYPE) (TEMPLATE(stack, TYPE)* p_stk)
         return NO_MEMORY;
 
     void* oldtemp = (char*)p_stk->data - sizeof(can_t);
-    memcpy(temp, (char*)p_stk->data - sizeof(can_t), p_stk->capacity * sizeof(TYPE) + 2 * sizeof(can_t));
+    memcpy(temp, (char*)p_stk->data - sizeof(can_t), p_stk->capacity * sizeof(TYPE) / 2 + 2 * sizeof(can_t));
     free(oldtemp);
 
     p_stk->data = (TYPE*)((char*)temp + sizeof(can_t));
@@ -491,7 +489,10 @@ static size_t TEMPLATE(StackSizeForHash, TYPE) (TEMPLATE(stack, TYPE)* p_stk)
 
     size_t size = 0;
 
+#ifdef CANARY_PROTECT
     size += sizeof(p_stk->canary1);
+#endif //CANARY_PROTECT
+
     size += sizeof(p_stk->capacity);
     size += sizeof(p_stk->size_cur);
     size += sizeof(p_stk->name);
@@ -504,7 +505,7 @@ static size_t TEMPLATE(StackSizeForHash, TYPE) (TEMPLATE(stack, TYPE)* p_stk)
 
 //------------------------------------------------------------------------------
 
-static error_t TEMPLATE(StackDump, TYPE) (TEMPLATE(stack, TYPE)* p_stk, const char* funcname, const char* logfile)
+static int TEMPLATE(StackDump, TYPE) (TEMPLATE(stack, TYPE)* p_stk, const char* funcname, const char* logfile)
 {
     const size_t linelen = 80;
     char divline[linelen + 1] = "********************************************************************************";
@@ -531,13 +532,19 @@ static error_t TEMPLATE(StackDump, TYPE) (TEMPLATE(stack, TYPE)* p_stk, const ch
 #else
     time_t t = time(NULL);
     struct tm tm = *localtime(&t);
-    fprintf(fp, "TIME: %d-%02d-%02d %02d:%02d:%02d\n", tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday, tm.tm_hour, tm.tm_min, tm.tm_sec);
+    fprintf(log, "TIME: %d-%02d-%02d %02d:%02d:%02d\n\n",
+        tm.tm_year + 1900,
+        tm.tm_mon + 1,
+        tm.tm_mday,
+        tm.tm_hour,
+        tm.tm_min,
+        tm.tm_sec);
 #endif
 
     if (p_stk == nullptr)
     {
         fprintf(fp, "\nStack (ERROR) [0x%p] \"unidentified stack\"\n", p_stk);
-        fprintf(fp, "%s\n", errstr[NULL_STACK_PTR + 1]);
+        fprintf(fp, "%s\n", errstr[STACK_NULL_STACK_PTR + 1]);
 
         fprintf(fp, "%s\n", divline);
         fclose(fp);
@@ -545,14 +552,14 @@ static error_t TEMPLATE(StackDump, TYPE) (TEMPLATE(stack, TYPE)* p_stk, const ch
         return OK;
     }
 
-    if ((p_stk->errCode == NOT_CONSTRUCTED)      ||
-        (p_stk->errCode == STACK_DESTRUCTED)     ||
-        (p_stk->errCode == NULL_DATA_PTR)        ||
-        (p_stk->errCode == SIZE_BIGGER_CAPACITY) ||
-        (p_stk->errCode == CAPACITY_WRONG_VALUE))
+    if ( (p_stk->errCode == STACK_NOT_CONSTRUCTED)      ||
+         (p_stk->errCode == STACK_DESTRUCTED)           ||
+         (p_stk->errCode == STACK_NULL_DATA_PTR)        ||
+         (p_stk->errCode == STACK_SIZE_BIGGER_CAPACITY) ||
+         (p_stk->errCode == STACK_CAPACITY_WRONG_VALUE)   )
     {
         fprintf(fp, "\nStack (ERROR) [0x%p] \"%s\" id (%d)\n", p_stk, p_stk->name, p_stk->id);
-        TEMPLATE(printError, TYPE) (p_stk, fp);
+        TEMPLATE(ErrorPrint, TYPE) (p_stk, fp);
 
         fprintf(fp, "%s\n", divline);
         fclose(fp);
@@ -564,10 +571,10 @@ static error_t TEMPLATE(StackDump, TYPE) (TEMPLATE(stack, TYPE)* p_stk, const ch
 
     if (p_stk->errCode)
     {
-        if ((p_stk->errCode == CANARY_DIED) || (p_stk->errCode == INCORRECT_HASH))
+        if ((p_stk->errCode == STACK_CANARY_DIED) || (p_stk->errCode == STACK_INCORRECT_HASH))
             StkState = (char*)errstr[NOT_OK + 1];
 
-        TEMPLATE(printError, TYPE) (p_stk, fp);
+        TEMPLATE(ErrorPrint, TYPE) (p_stk, fp);
     }
 
     fprintf(fp, "\nStack (%s) [0x%p] \"%s\", id (%d)\n", StkState, p_stk, p_stk->name, p_stk->id);
@@ -584,13 +591,13 @@ static error_t TEMPLATE(StackDump, TYPE) (TEMPLATE(stack, TYPE)* p_stk, const ch
 #endif // CANARY_PROTECT
 
 #ifdef HASH_PROTECT
-        fprintf(fp, "\tStack hash         = 0x" HASH_PRINT_FORMAT "\n",   p_stk->stackhash);
-        fprintf(fp, "\tData hash          = 0x" HASH_PRINT_FORMAT "\n\n", p_stk->datahash);
+        fprintf(fp, "\tStack hash         = " HASH_PRINT_FORMAT "\n",   p_stk->stackhash);
+        fprintf(fp, "\tData hash          = " HASH_PRINT_FORMAT "\n\n", p_stk->datahash);
 
-        if ((p_stk->errCode != OK) && (p_stk->errCode != EMPTY_STACK) && (p_stk->errCode != NO_MEMORY))
+        if ((p_stk->errCode != OK) && (p_stk->errCode != STACK_EMPTY_STACK) && (p_stk->errCode != NO_MEMORY))
         {
-            fprintf(fp, "\tTrue stack hash    = 0x" HASH_PRINT_FORMAT "\n",   hash(p_stk, TEMPLATE(StackSizeForHash, TYPE) (p_stk)));
-            fprintf(fp, "\tTrue data hash     = 0x" HASH_PRINT_FORMAT "\n\n", hash(p_stk->data, p_stk->capacity * sizeof(TYPE)));
+            fprintf(fp, "\tTrue stack hash    = " HASH_PRINT_FORMAT "\n",   hash(p_stk, TEMPLATE(StackSizeForHash, TYPE) (p_stk)));
+            fprintf(fp, "\tTrue data hash     = " HASH_PRINT_FORMAT "\n\n", hash(p_stk->data, p_stk->capacity * sizeof(TYPE)));
         }
 #endif // HASH_PROTECT
 
@@ -625,18 +632,18 @@ static error_t TEMPLATE(StackDump, TYPE) (TEMPLATE(stack, TYPE)* p_stk, const ch
 
 //------------------------------------------------------------------------------
 
-static error_t TEMPLATE(StackCheck, TYPE) (TEMPLATE(stack, TYPE)* p_stk, const char* funcname)
+static int TEMPLATE(StackCheck, TYPE) (TEMPLATE(stack, TYPE)* p_stk, const char* funcname)
 {
     if (p_stk == nullptr)
     {
-        return NULL_STACK_PTR;
+        return STACK_NULL_STACK_PTR;
     }
 
-    if (p_stk->errCode == NOT_CONSTRUCTED)
+    if (p_stk->errCode == STACK_NOT_CONSTRUCTED)
     {
         p_stk->name = "unidentified stack";
         p_stk->id = -666;
-        return NOT_CONSTRUCTED;
+        return STACK_NOT_CONSTRUCTED;
     }
 
     if (p_stk->errCode == STACK_DESTRUCTED)
@@ -647,55 +654,55 @@ static error_t TEMPLATE(StackCheck, TYPE) (TEMPLATE(stack, TYPE)* p_stk, const c
 #ifdef HASH_PROTECT
     if (p_stk->stackhash != hash(p_stk, TEMPLATE(StackSizeForHash, TYPE) (p_stk)))
     {
-        p_stk->errCode = INCORRECT_HASH;
-        return INCORRECT_HASH;
+        p_stk->errCode = STACK_INCORRECT_HASH;
+        return STACK_INCORRECT_HASH;
     }
 #endif // HASH_PROTECT
 
     if (p_stk->data == nullptr)
     {
-        p_stk->errCode = NULL_DATA_PTR;
-        return NULL_DATA_PTR;
+        p_stk->errCode = STACK_NULL_DATA_PTR;
+        return STACK_NULL_DATA_PTR;
     }
 
     if (p_stk->size_cur > p_stk->capacity)
     {
-        p_stk->errCode = SIZE_BIGGER_CAPACITY;
-        return SIZE_BIGGER_CAPACITY;
+        p_stk->errCode = STACK_SIZE_BIGGER_CAPACITY;
+        return STACK_SIZE_BIGGER_CAPACITY;
     }
 
     if ((p_stk->size_cur == 0) && (funcname == "StackPop_" TEMPLATE(TYPE, PRINT_TYPE)))
     {
-        p_stk->errCode = EMPTY_STACK;
+        p_stk->errCode = STACK_EMPTY_STACK;
 
         return OK;
     }
 
     if ((p_stk->capacity == 0) || (p_stk->capacity > MAX_CAPACITY))
     {
-        p_stk->errCode = CAPACITY_WRONG_VALUE;
-        return CAPACITY_WRONG_VALUE;
+        p_stk->errCode = STACK_CAPACITY_WRONG_VALUE;
+        return STACK_CAPACITY_WRONG_VALUE;
     }
 
     if (!(TEMPLATE(isPOISON, TYPE) (p_stk->data[p_stk->size_cur])))
     {
-        p_stk->errCode = WRONG_CUR_SIZE;
-        return WRONG_CUR_SIZE;
+        p_stk->errCode = STACK_WRONG_CUR_SIZE;
+        return STACK_WRONG_CUR_SIZE;
     }
 
 #ifdef CANARY_PROTECT
     if (TEMPLATE(CanaryCheck, TYPE) (p_stk))
     {
-        p_stk->errCode = CANARY_DIED;
-        return CANARY_DIED;
+        p_stk->errCode = STACK_CANARY_DIED;
+        return STACK_CANARY_DIED;
     }
 #endif // CANARY_PROTECT
 
 #ifdef HASH_PROTECT
     if (p_stk->datahash != hash(p_stk->data, p_stk->capacity * sizeof(TYPE)))
     {
-        p_stk->errCode = INCORRECT_HASH;
-        return INCORRECT_HASH;
+        p_stk->errCode = STACK_INCORRECT_HASH;
+        return STACK_INCORRECT_HASH;
     }
 #endif // HASH_PROTECT
 
@@ -708,13 +715,13 @@ static error_t TEMPLATE(StackCheck, TYPE) (TEMPLATE(stack, TYPE)* p_stk, const c
 
 //------------------------------------------------------------------------------
 
-static void TEMPLATE(printError, TYPE) (TEMPLATE(stack, TYPE)* p_stk, FILE* fp)
+static void TEMPLATE(ErrorPrint, TYPE) (TEMPLATE(stack, TYPE)* p_stk, FILE* fp)
 {
     assert(fp != nullptr);
 
     if (p_stk == nullptr)
     {
-        CONSOLE_PRINT{ printf("%s\n", errstr[NULL_STACK_PTR + 1]); }
+        CONSOLE_PRINT{ printf("%s\n", errstr[STACK_NULL_STACK_PTR + 1]); }
     }
 
     else if (p_stk->errCode != OK)
@@ -727,12 +734,60 @@ static void TEMPLATE(printError, TYPE) (TEMPLATE(stack, TYPE)* p_stk, FILE* fp)
 
 //------------------------------------------------------------------------------
 
+static void TEMPLATE(printError, TYPE) (const char* logname, const char* file, int line, const char* function, int err)
+{
+    assert(function != nullptr);
+    assert(logname != nullptr);
+    assert(file != nullptr);
+
+    FILE* log = fopen(logname, "a");
+    assert(log != nullptr);
+
+    fprintf(log, "********************************************************************************\n");
+
+#if defined(_WIN32)
+    SYSTEMTIME localtime = {};
+    GetLocalTime(&localtime);
+
+    fprintf(log, "TIME: %d-%02d-%02d %02d:%02d:%02d.%03d\n\n",
+        localtime.wYear,
+        localtime.wMonth,
+        localtime.wDay,
+        localtime.wHour,
+        localtime.wMinute,
+        localtime.wSecond,
+        localtime.wMilliseconds);
+#else
+    time_t t = time(NULL);
+    struct tm tm = *localtime(&t);
+    fprintf(log, "TIME: %d-%02d-%02d %02d:%02d:%02d\n\n",
+        tm.tm_year + 1900,
+        tm.tm_mon + 1,
+        tm.tm_mday,
+        tm.tm_hour,
+        tm.tm_min,
+        tm.tm_sec);
+#endif
+
+    fprintf(log, "ERROR: file %s  line %d  function %s\n\n", file, line, function);
+    fprintf(log, "%s\n", errstr[err + 1]);
+
+    printf (     "ERROR: file %s  line %d  function %s\n",   file, line, function);
+    printf (     "%s\n\n", errstr[err + 1]);
+
+    fclose(log);
+}
+
+//------------------------------------------------------------------------------
+
 static can_t TEMPLATE(CanaryChange, TYPE) (can_t canary)
 {
     return (canary * 2 + rand() * ((can_t)rand() % 3 - 1)) % ULLONG_MAX;
 }
 
 //------------------------------------------------------------------------------
+
+#ifdef CANARY_PROTECT
 
 static void TEMPLATE(CanaryPlacing, TYPE) (TEMPLATE(stack, TYPE)* p_stk)
 {
@@ -745,7 +800,11 @@ static void TEMPLATE(CanaryPlacing, TYPE) (TEMPLATE(stack, TYPE)* p_stk)
     ((can_t*)p_stk->data)[p_stk->capacity * sizeof(TYPE) / sizeof(can_t)] = canaries[p_stk->id];
 }
 
+#endif //CANARY_PROTECT
+
 //------------------------------------------------------------------------------
+
+#ifdef CANARY_PROTECT
 
 static int TEMPLATE(CanaryCheck, TYPE) (TEMPLATE(stack, TYPE)* p_stk)
 {
@@ -763,5 +822,7 @@ static int TEMPLATE(CanaryCheck, TYPE) (TEMPLATE(stack, TYPE)* p_stk)
 
     return OK;
 }
+
+#endif //CANARY_PROTECT
 
 //------------------------------------------------------------------------------

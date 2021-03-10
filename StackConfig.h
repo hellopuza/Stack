@@ -1,11 +1,13 @@
 /*------------------------------------------------------------------------------
     * File:        StackConfig.h                                               *
-    * Description: Stack congigurations                                        *
+    * Description: Stack congigurations which define different stack types,    *
+                   canary, hashes and errors                                   *
     * Created:     1 dec 2020                                                  *
     * Copyright:   (C) 2020 MIPT                                               *
     * Author:      Artem Puzankov                                              *
     * Email:       puzankov.ao@phystech.edu                                    *
-*///----------------------------------------------------------------------------
+    * GitHub:      https://github.com/hellopuza                                *
+    *///------------------------------------------------------------------------
 
 #ifndef STACK_CONFIG_H_DEFINED
 #define STACK_CONFIG_H_DEFINED
@@ -18,10 +20,12 @@
 
 #define CONSOLE_PRINT if(1)
 #define DUMP_PRINT    if(1)
-static const char* logname = "stack.log";
+static const char* stack_logname = "stack.log";
+
 
 #define CANARY_PROTECT
 #define HASH_PROTECT
+
 
 
 #ifndef PTR_T
@@ -49,7 +53,7 @@ typedef size_t ptr_t;
 #define size_t_PRINT_TYPE    "size_t"
 #define size_t_POISON         UINT_MAX
 
-#define ptr_t_PRINT_FORMAT   "0x%X"
+#define ptr_t_PRINT_FORMAT   "0x%08X"
 #define ptr_t_PRINT_TYPE     "ptr_t"
 #define ptr_t_POISON          PTR_MAX
 
@@ -57,8 +61,6 @@ typedef size_t ptr_t;
 #define char_PRINT_TYPE      "char"
 #define char_POISON          '\0'
 
-
-typedef size_t error_t;
 
 static const size_t MAX_STACK_NUM = 100;
 static const size_t MAX_CAPACITY  = 100000;
@@ -72,7 +74,12 @@ typedef unsigned long long can_t;
 static can_t perfect_canary = (srand(time(NULL)), rand());
 static can_t canaries[MAX_STACK_NUM] = {};
 
+#else
+
+typedef char can_t;
+
 #endif //CANARY_PROTECT
+
 
 #ifndef ERRORS_DEFINED
 #define ERRORS_DEFINED
@@ -82,17 +89,21 @@ enum Errors
     NOT_OK = -1                                                     ,
     OK = 0                                                          ,
     NO_MEMORY                                                       ,
-    CANARY_DIED                                                     ,
-    EMPTY_STACK                                                     ,
-    NULL_DATA_PTR                                                   ,
-    NULL_STACK_PTR                                                  ,
-    WRONG_CUR_SIZE                                                  ,
-    INCORRECT_HASH                                                  ,
-    NOT_CONSTRUCTED                                                 ,
-    STACK_DESTRUCTED                                                ,
+    STACK_CANARY_DIED                                               ,
+    STACK_CAPACITY_WRONG_VALUE                                      ,
     STACK_CONSTRUCTED                                               ,
-    SIZE_BIGGER_CAPACITY                                            ,
-    CAPACITY_WRONG_VALUE                                            ,
+    STACK_DESTRUCTED                                                ,
+    STACK_EMPTY_STACK                                               ,
+    STACK_INCORRECT_HASH                                            ,
+    STACK_NOT_CONSTRUCTED                                           ,
+    STACK_NULL_DATA_PTR                                             ,
+    STACK_NULL_INPUT_STACK_PTR                                      ,
+    STACK_NULL_STACK_PTR                                            ,
+    STACK_SIZE_BIGGER_CAPACITY                                      ,
+    STACK_TOO_MANY_STACKS                                           ,
+    STACK_WRONG_CUR_SIZE                                            ,
+    STACK_WRONG_INPUT_CAPACITY_VALUE_BIG                            ,
+    STACK_WRONG_INPUT_CAPACITY_VALUE_NIL                            ,
 };
 
 static const char* errstr[] =
@@ -101,16 +112,20 @@ static const char* errstr[] =
     "OK"                                                            ,
     "Failed to allocate memory"                                     ,
     "Stack cracked, canary was killed"                              ,
+    "Bad size stack capacity"                                       ,
+    "Stack already constructed"                                     ,
+    "Stack already destructed"                                      ,
     "Stack is empty"                                                ,
-    "The pointer to the stack is null, data lost"                   ,
-    "The pointer to the stack is null, stack lost"                  ,
-    "Current size of stack data is wrong"                           ,
     "Stack cracked, hash corrupted"                                 ,
     "Stack did not constructed, operation is impossible"            ,
-    "Stack already destructed"                                      ,
-    "Stack already constructed"                                     ,
+    "The pointer to the stack is null, data lost"                   ,
+    "The input value of the stack pointer turned out to be zero"    ,
+    "The pointer to the stack is null, stack lost"                  ,
     "The size of the stack data is larger than the capacity"        ,
-    "Bad size stack capacity"                                       ,
+    "Too many stacks created, cannot create a new one"              ,
+    "Current size of stack data is wrong"                           ,
+    "Wrong capacity value: - is too big"                            ,
+    "Wrong capacity value: - is nil"                                ,
 };
 
 #endif // ERRORS_DEFINED
