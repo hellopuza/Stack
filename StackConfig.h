@@ -20,9 +20,7 @@
 
 #define CONSOLE_PRINT if(1)
 #define DUMP_PRINT    if(1)
-
 static const char* stack_logname = "stack.log";
-
 
 #define CANARY_PROTECT
 #define HASH_PROTECT
