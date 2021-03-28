@@ -264,7 +264,6 @@ static void TEMPLATE(CanaryPlacing, TYPE) (TEMPLATE(stack, TYPE)* p_stk);
 /*! @brief   Check stack for canaries (if enabled).
  *
  *  @param   p_stk       Pointer to the stack
- *  @param   funcname    Name of the function from which the StackCheck was called
  *
  *  @return  OK if all canaries aren't damaged, otherwise NOT_OK
  */
