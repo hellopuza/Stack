@@ -20,7 +20,6 @@
 #endif
 
 #include "StackConfig.h"
-#include "Template.h"
 #include <assert.h>
 #include <limits.h>
 #include <memory.h>
@@ -60,34 +59,41 @@ static char* stack_name = nullptr;
 #define StackConstruct(NAME, capacity, STK_TYPE) \
         Stack<STK_TYPE> NAME (capacity, (char*)#NAME);
 
-template <class TYPE>
+
+template <typename TYPE>
 class Stack
 {
 private:
 
 #ifdef CANARY_PROTECT
-    can_t canary1_;
+    can_t canary1_ = 0;
 #endif //CANARY_PROTECT
 
-    size_t  capacity_;
-    size_t  size_cur_;
-    const char* name_;
+    size_t  capacity_ = 0;
+    size_t  size_cur_ = 0;
+    const char* name_ = nullptr;
 
     TYPE data_ [DATA_SIZE];
 
-    int errCode_ = STACK_OK;
-    int id_;
+    int errCode_;
+    int id_ = 0;
 
 #ifdef HASH_PROTECT
-    hash_t stackhash_;
-    hash_t datahash_;
+    hash_t stackhash_ = 0;
+    hash_t datahash_  = 0;
 #endif // HASH_PROTECT
 
 #ifdef CANARY_PROTECT
-    can_t canary2_;
+    can_t canary2_ = 0;
 #endif //CANARY_PROTECT
 
 public:
+
+//------------------------------------------------------------------------------
+/*! @brief   Stack constructor.
+ */
+
+    Stack ();
 
 //------------------------------------------------------------------------------
 /*! @brief   Stack constructor.
@@ -122,6 +128,17 @@ public:
 
     TYPE Pop ();
 
+//------------------------------------------------------------------------------
+/*! @brief   Print the contents of the stack and its data to the logfile.
+ *
+ *  @param   funcname    Name of the function from which the StackDump was called
+ *  @param   logname     Name of the logfile
+ *
+ *  @return  error code
+ */
+
+    int Dump (const char* funcname = "@some function@", const char* logfile = stack_logname);
+
 /*------------------------------------------------------------------------------
                    Private functions                                           *
 *///----------------------------------------------------------------------------
@@ -133,16 +150,6 @@ private:
  */
 
     void fillPoison ();
-
-//------------------------------------------------------------------------------
-/*! @brief   Check if value is POISON.
- *
- *  @param   value       Value to be checked
- *
- *  @return 1 if value is POISON, else 0
- */
-
-    int isPOISON (TYPE value);
 
  //------------------------------------------------------------------------------
  /*! @brief   Increase the stack by 2 times.
@@ -159,17 +166,6 @@ private:
  */
 
     size_t SizeForHash ();
-
-//------------------------------------------------------------------------------
-/*! @brief   (THE BEST FUNCTION) Print the contents of the stack and its data to the logfile.
- *
- *  @param   funcname    Name of the function from which the StackDump was called
- *  @param   logname     Name of the logfile
- *
- *  @return  error code
- */
-
-    int Dump (const char* funcname = "@some function@", const char* logfile = stack_logname);
 
 //------------------------------------------------------------------------------
 /*! @brief   Check stack for problems, canaries, hash (if enabled).
@@ -240,7 +236,21 @@ private:
 
 #endif // CANARY_PROTECT
 
+//------------------------------------------------------------------------------
 };
+
+//------------------------------------------------------------------------------
+/*! @brief   Check if value is POISON.
+ *
+ *  @param   value       Value to be checked
+ *
+ *  @return 1 if value is POISON, else 0
+ */
+
+template <typename TYPE>
+int isPOISON (TYPE value);
+
+//------------------------------------------------------------------------------
 
 #include "Stack.ipp"
 

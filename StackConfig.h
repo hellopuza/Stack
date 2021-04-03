@@ -50,13 +50,13 @@
 static const char* stack_logname = "stack.log";
 
 
-template<typename TYPE> TYPE POISON;
+template<typename TYPE> const TYPE POISON;
 
-template<> double POISON<double> = NAN;
-template<> float  POISON<float>  = NAN;
-template<> int    POISON<int>    = INT_MAX;
-template<> size_t POISON<size_t> = UINT_MAX;
-template<> char   POISON<char>   = '\0';
+template<> const double POISON<double> = NAN;
+template<> const float  POISON<float>  = NAN;
+template<> const int    POISON<int>    = INT_MAX;
+template<> const size_t POISON<size_t> = UINT_MAX;
+template<> const char   POISON<char>   = '\0';
 
 
 template<typename TYPE> const char* PRINT_TYPE;
@@ -73,7 +73,7 @@ template<typename TYPE> const char* PRINT_FORMAT;
 template<> const char* PRINT_FORMAT<double> = "%lf";
 template<> const char* PRINT_FORMAT<float>  = "%f";
 template<> const char* PRINT_FORMAT<int>    = "%d";
-template<> const char* PRINT_FORMAT<size_t> = "%u";
+template<> const char* PRINT_FORMAT<size_t> = "0x%08X";
 template<> const char* PRINT_FORMAT<char>   = "%c";
 
 /*
@@ -133,6 +133,7 @@ enum StackErrors
     STACK_DESTRUCTED                                                ,
     STACK_EMPTY_STACK                                               ,
     STACK_INCORRECT_HASH                                            ,
+    STACK_NOT_CONSTRUCTED                                           ,
     STACK_NULL_DATA_PTR                                             ,
     STACK_NULL_INPUT_STACK_PTR                                      ,
     STACK_NULL_STACK_PTR                                            ,
@@ -154,6 +155,7 @@ static const char* stk_errstr[] =
     "Stack already destructed"                                      ,
     "Stack is empty"                                                ,
     "Stack cracked, hash corrupted"                                 ,
+    "Stack did not constructed, operation is impossible"            ,
     "The pointer to the stack is null, data lost"                   ,
     "The input value of the stack pointer turned out to be zero"    ,
     "The pointer to the stack is null, stack lost"                  ,

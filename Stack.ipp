@@ -9,13 +9,19 @@
     *///------------------------------------------------------------------------
 
 template <typename TYPE>
-Stack<TYPE>::Stack (size_t capacity, char* stack_name):
+Stack<TYPE>::Stack () : errCode_ (STACK_NOT_CONSTRUCTED) { }
+
+//------------------------------------------------------------------------------
+
+template <typename TYPE>
+Stack<TYPE>::Stack (size_t capacity, char* stack_name) :
     data_     (),
     size_cur_ (0),
     //capacity_ (capacity),
     capacity_ (DATA_SIZE),
     name_     (stack_name),
-    id_       (stack_id++)
+    id_       (stack_id++),
+    errCode_  (STACK_OK)
 {
     STACK_ASSERTOK((capacity > MAX_CAPACITY),   STACK_WRONG_INPUT_CAPACITY_VALUE_BIG);
     STACK_ASSERTOK((capacity == 0),             STACK_WRONG_INPUT_CAPACITY_VALUE_NIL);
@@ -179,7 +185,7 @@ void Stack<TYPE>::fillPoison ()
 //------------------------------------------------------------------------------
 
 template <typename TYPE>
-int Stack<TYPE>::isPOISON (TYPE value)
+int isPOISON (TYPE value)
 {
     if (isnan((double)POISON<TYPE>))
         if (isnan((double)value))
@@ -377,6 +383,11 @@ int Stack<TYPE>::Check (const char* funcname)
     if (this == nullptr)
     {
         return STACK_NULL_STACK_PTR;
+    }
+
+    if (errCode_ == STACK_NOT_CONSTRUCTED)
+    {
+        return STACK_NOT_CONSTRUCTED;
     }
 
     if (errCode_ == STACK_DESTRUCTED)
