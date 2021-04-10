@@ -17,8 +17,7 @@ template <typename TYPE>
 Stack<TYPE>::Stack (size_t capacity, char* stack_name) :
     data_     (),
     size_cur_ (0),
-    //capacity_ (capacity),
-    capacity_ (DATA_SIZE),
+    capacity_ (capacity),
     name_     (stack_name),
     id_       (stack_id++),
     errCode_  (STACK_OK)
@@ -27,12 +26,10 @@ Stack<TYPE>::Stack (size_t capacity, char* stack_name) :
     STACK_ASSERTOK((capacity == 0),             STACK_WRONG_INPUT_CAPACITY_VALUE_NIL);
     STACK_ASSERTOK((stack_id == MAX_STACK_NUM), STACK_TOO_MANY_STACKS);
 
-    /*
     void* temp = calloc(capacity_ * sizeof(TYPE) + 2 * sizeof(can_t), sizeof(char));
     STACK_ASSERTOK((temp == nullptr), STACK_NO_MEMORY);
 
     data_ = (TYPE*)((char*)temp + sizeof(can_t));
-    */
 
     fillPoison();
 
@@ -63,9 +60,7 @@ Stack<TYPE>::~Stack ()
 
     fillPoison();
 
-    /*
     free((char*)data_ - sizeof(can_t));
-    */
 
     capacity_ = 0;
 
@@ -79,7 +74,7 @@ Stack<TYPE>::~Stack ()
     stackhash_ = 0;
 #endif // HASH_PROTECT
 
-    //data_  = nullptr;
+    data_  = nullptr;
     errCode_ = STACK_DESTRUCTED;
 }
 
@@ -213,9 +208,7 @@ int Stack<TYPE>::Expand ()
     memcpy(temp, (char*)data_ - sizeof(can_t), capacity_ * sizeof(TYPE) / 2 + 2 * sizeof(can_t));
     free(oldtemp);
 
-    /*
     data_ = (TYPE*)((char*)temp + sizeof(can_t));
-    */
 
     fillPoison();
 
@@ -260,32 +253,15 @@ int Stack<TYPE>::Dump (const char* funcname, const char* logfile)
     if (funcname != nullptr)
         fprintf(fp, "This dump was called from a function %s\n", funcname);
 
-#if defined(_WIN32)
-
-    SYSTEMTIME localtime = {};
-    GetLocalTime(&localtime);
-
-    fprintf(fp, "TIME: %d-%02d-%02d %02d:%02d:%02d.%03d\n",
-            localtime.wYear,
-            localtime.wMonth,
-            localtime.wDay,
-            localtime.wHour,
-            localtime.wMinute,
-            localtime.wSecond,
-            localtime.wMilliseconds);
-#else
-
     time_t t = time(NULL);
     struct tm tm = *localtime(&t);
-    fprintf(log, "TIME: %d-%02d-%02d %02d:%02d:%02d\n\n",
+    fprintf(fp, "TIME: %d-%02d-%02d %02d:%02d:%02d\n\n",
             tm.tm_year + 1900,
             tm.tm_mon + 1,
             tm.tm_mday,
             tm.tm_hour,
             tm.tm_min,
             tm.tm_sec);
-
-#endif // _WIN32
 
     if (this == nullptr)
     {
@@ -484,19 +460,6 @@ void Stack<TYPE>::printError (const char* logname, const char* file, int line, c
 
     fprintf(log, "********************************************************************************\n");
 
-#if defined(_WIN32)
-    SYSTEMTIME localtime = {};
-    GetLocalTime(&localtime);
-
-    fprintf(log, "TIME: %d-%02d-%02d %02d:%02d:%02d.%03d\n\n",
-            localtime.wYear,
-            localtime.wMonth,
-            localtime.wDay,
-            localtime.wHour,
-            localtime.wMinute,
-            localtime.wSecond,
-            localtime.wMilliseconds);
-#else
     time_t t = time(NULL);
     struct tm tm = *localtime(&t);
     fprintf(log, "TIME: %d-%02d-%02d %02d:%02d:%02d\n\n",
@@ -506,7 +469,6 @@ void Stack<TYPE>::printError (const char* logname, const char* file, int line, c
             tm.tm_hour,
             tm.tm_min,
             tm.tm_sec);
-#endif // _WIN32
 
     fprintf(log, "ERROR: file %s  line %d  function %s\n\n", file, line, function);
     fprintf(log, "%s\n", stk_errstr[err + 1]);
@@ -541,11 +503,8 @@ void Stack<TYPE>::CanaryPlacing ()
     canary1_ = canaries[id_];
     canary2_ = canaries[id_];
 
-
-    /*
     ((can_t*)data_)[-1] = canaries[id_];
     ((can_t*)data_)[capacity_ * sizeof(TYPE) / sizeof(can_t)] = canaries[id_];
-    */
 }
 
 #endif //CANARY_PROTECT
@@ -563,13 +522,11 @@ int Stack<TYPE>::CanaryCheck ()
     if (canary2_ != canaries[id_])
         return STACK_NOT_OK;
 
-    /*
     if (((can_t*)data_)[-1] != canaries[id_])
         return STACK_NOT_OK;
 
     if (((can_t*)data_)[capacity_ * sizeof(TYPE) / sizeof(can_t)] != canaries[id_])
         return STACK_NOT_OK;
-    */
 
     return STACK_OK;
 }

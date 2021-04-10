@@ -51,8 +51,6 @@
                                     exit(err); /**/                                                     \
                                   }
 
-const size_t DATA_SIZE = 20;
-
 static int   stack_id   = 0;
 static char* stack_name = nullptr;
 
@@ -73,7 +71,7 @@ private:
     size_t  size_cur_ = 0;
     const char* name_ = nullptr;
 
-    TYPE data_ [DATA_SIZE];
+    TYPE* data_ = nullptr;
 
     int errCode_;
     int id_ = 0;
@@ -90,7 +88,7 @@ private:
 public:
 
 //------------------------------------------------------------------------------
-/*! @brief   Stack constructor.
+/*! @brief   Stack default constructor.
  */
 
     Stack ();
