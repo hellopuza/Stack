@@ -14,7 +14,7 @@ Stack<TYPE>::Stack () : errCode_ (STACK_NOT_CONSTRUCTED) { }
 //------------------------------------------------------------------------------
 
 template <typename TYPE>
-Stack<TYPE>::Stack (size_t capacity, char* stack_name) :
+Stack<TYPE>::Stack (char* stack_name, size_t capacity) :
     data_     (),
     size_cur_ (0),
     capacity_ (capacity),
@@ -26,18 +26,16 @@ Stack<TYPE>::Stack (size_t capacity, char* stack_name) :
     STACK_ASSERTOK((capacity == 0),             STACK_WRONG_INPUT_CAPACITY_VALUE_NIL);
     STACK_ASSERTOK((stack_id == MAX_STACK_NUM), STACK_TOO_MANY_STACKS);
 
-    void* temp = calloc(capacity_ * sizeof(TYPE) + 2 * sizeof(can_t), sizeof(char));
-    STACK_ASSERTOK((temp == nullptr), STACK_NO_MEMORY);
-
-    data_ = (TYPE*)((char*)temp + sizeof(can_t));
+    try
+    {
+        data_ = new TYPE[capacity_];
+    }
+    catch (std::bad_alloc& err)
+    {
+        STACK_ASSERTOK(STACK_NO_MEMORY, STACK_NO_MEMORY);
+    }
 
     fillPoison();
-
-#ifdef CANARY_PROTECT
-    perfect_canary = CanaryChange (perfect_canary);
-    canaries[id_]  = perfect_canary;
-    CanaryPlacing();
-#endif // CANARY_PROTECT
 
 #ifdef HASH_PROTECT
     datahash_  = hash(data_, capacity_ * sizeof(TYPE));
@@ -46,7 +44,41 @@ Stack<TYPE>::Stack (size_t capacity, char* stack_name) :
 
     STACK_CHECK;
 
-    DUMP_PRINT{ Dump (__FUNCTION__); }
+    DUMP_PRINT{ Dump(__FUNC_NAME__); }
+}
+
+//------------------------------------------------------------------------------
+
+template <typename TYPE>
+void Stack<TYPE>::dCopy (const Stack& obj)
+{
+    STACK_ASSERTOK((capacity_ > MAX_CAPACITY),   STACK_WRONG_INPUT_CAPACITY_VALUE_BIG);
+    STACK_ASSERTOK((capacity_ == 0),             STACK_WRONG_INPUT_CAPACITY_VALUE_NIL);
+    STACK_ASSERTOK((stack_id == MAX_STACK_NUM),  STACK_TOO_MANY_STACKS);
+
+    size_cur_ = obj.size_cur_;
+    capacity_ = obj.capacity_;
+
+    try
+    {
+        data_ = new TYPE[capacity_];
+    }
+    catch (std::bad_alloc& err)
+    {
+        STACK_ASSERTOK(STACK_NO_MEMORY, STACK_NO_MEMORY);
+    }
+
+    for (int i = 0; i < capacity_; ++i) data_[i] = obj.data_[i];
+    errCode_ = STACK_OK;
+
+#ifdef HASH_PROTECT
+    datahash_  = hash(data_, capacity_ * sizeof(TYPE));
+    stackhash_ = hash(this, SizeForHash());
+#endif // HASH_PROTECT
+
+    STACK_CHECK;
+
+    DUMP_PRINT{ Dump(__FUNC_NAME__); }
 }
 
 //------------------------------------------------------------------------------
@@ -54,28 +86,32 @@ Stack<TYPE>::Stack (size_t capacity, char* stack_name) :
 template <typename TYPE>
 Stack<TYPE>::~Stack ()
 {
-    STACK_CHECK;
+    DUMP_PRINT{ Dump (__FUNC_NAME__); }
 
-    size_cur_ = 0;
+    if (errCode_ == STACK_NOT_CONSTRUCTED) {}
 
-    fillPoison();
+    else if (errCode_ != STACK_DESTRUCTED)
+    {
+        size_cur_ = 0;
 
-    free((char*)data_ - sizeof(can_t));
+        fillPoison();
 
-    capacity_ = 0;
+        delete [] data_;
+        data_  = nullptr;
 
-#ifdef CANARY_PROTECT
-    canary1_ = 0;
-    canary2_ = 0;
-#endif // CANARY_PROTECT
+        capacity_ = 0;
 
-#ifdef HASH_PROTECT
-    datahash_  = 0;
-    stackhash_ = 0;
-#endif // HASH_PROTECT
+        #ifdef HASH_PROTECT
+            datahash_  = 0;
+            stackhash_ = 0;
+        #endif // HASH_PROTECT
 
-    data_  = nullptr;
-    errCode_ = STACK_DESTRUCTED;
+        errCode_ = STACK_DESTRUCTED;
+    }
+    else
+    {
+        STACK_ASSERTOK(STACK_DESTRUCTOR_REPEATED, STACK_DESTRUCTOR_REPEATED);
+    }
 }
 
 //------------------------------------------------------------------------------
@@ -85,29 +121,9 @@ int Stack<TYPE>::Push (TYPE value)
 {
     STACK_CHECK;
 
-    if (size_cur_ == capacity_ - 1)
-    {
-        if (Expand() == STACK_NO_MEMORY)
-        {
-            errCode_ = STACK_NO_MEMORY;
-
-            DUMP_PRINT{ Dump (__FUNCTION__); }
-
-#ifdef HASH_PROTECT
-            datahash_  = hash(data_, capacity_ * sizeof(TYPE));
-            stackhash_ = hash(this, SizeForHash());
-#endif // HASH_PROTECT
-
-            exit(STACK_NO_MEMORY);
-        }
-    }
+    if (size_cur_ == capacity_ - 1) Expand();
 
     data_[size_cur_++] = value;
-
-#ifdef CANARY_PROTECT
-    canaries[id_] = CanaryChange(canaries[id_]);
-    CanaryPlacing();
-#endif // CANARY_PROTECT
 
 #ifdef HASH_PROTECT
     datahash_  = hash(data_, capacity_ * sizeof(TYPE));
@@ -116,7 +132,7 @@ int Stack<TYPE>::Push (TYPE value)
 
     STACK_CHECK;
 
-    DUMP_PRINT{ Dump (__FUNCTION__); }
+    DUMP_PRINT{ Dump (__FUNC_NAME__); }
 
     return STACK_OK;
 }
@@ -132,12 +148,12 @@ TYPE Stack<TYPE>::Pop ()
 
     if (errCode_ == STACK_EMPTY_STACK)
     {
-        DUMP_PRINT{ Dump (__FUNCTION__); }
+        DUMP_PRINT{ Dump (__FUNC_NAME__); }
 
-#ifdef HASH_PROTECT
-        datahash_  = hash(data_, capacity_ * sizeof(TYPE));
-        stackhash_ = hash(this, SizeForHash());
-#endif // HASH_PROTECT
+        #ifdef HASH_PROTECT
+            datahash_  = hash(data_, capacity_ * sizeof(TYPE));
+            stackhash_ = hash(this, SizeForHash());
+        #endif // HASH_PROTECT
 
         return POISON<TYPE>;
     }
@@ -146,20 +162,44 @@ TYPE Stack<TYPE>::Pop ()
 
     data_[size_cur_] = POISON<TYPE>;
 
-
-#ifdef CANARY_PROTECT
-    canaries[id_] = CanaryChange(canaries[id_]);
-    CanaryPlacing();
-#endif // CANARY_PROTECT
-
 #ifdef HASH_PROTECT
     datahash_  = hash(data_, capacity_ * sizeof(TYPE));
     stackhash_ = hash(this, SizeForHash());
 #endif // HASH_PROTECT
 
-    DUMP_PRINT{ Dump (__FUNCTION__); }
+    STACK_CHECK;
+
+    DUMP_PRINT{ Dump (__FUNC_NAME__); }
 
     return value;
+}
+
+//------------------------------------------------------------------------------
+
+template <typename TYPE>
+size_t Stack<TYPE>::getSize() const
+{
+    return size_cur_;
+}
+
+//------------------------------------------------------------------------------
+
+template <typename TYPE>
+TYPE& Stack<TYPE>::operator [] (size_t n)
+{
+    STACK_ASSERTOK((n >= capacity_), STACK_MEM_ACCESS_VIOLATION);
+
+    return data_[n];
+}
+
+//------------------------------------------------------------------------------
+
+template <typename TYPE>
+const TYPE& Stack<TYPE>::operator [] (size_t n) const
+{
+    STACK_ASSERTOK((n >= capacity_), STACK_MEM_ACCESS_VIOLATION);
+    
+    return data_[n];
 }
 
 //------------------------------------------------------------------------------
@@ -182,8 +222,10 @@ void Stack<TYPE>::fillPoison ()
 template <typename TYPE>
 int isPOISON (TYPE value)
 {
-    if (isnan((double)POISON<TYPE>))
-        if (isnan((double)value))
+    if (value == POISON<TYPE>) return 1;
+
+    if (isnan(*(double*)&POISON<TYPE>))
+        if (isnan(*(double*)&value))
             return 1;
         else
             return 0;
@@ -200,42 +242,24 @@ int Stack<TYPE>::Expand ()
 
     capacity_ *= 2;
 
-    void* temp = calloc(capacity_ * sizeof(TYPE) + 2 * sizeof(can_t), sizeof(char));
-    if (temp == nullptr)
-        return STACK_NO_MEMORY;
+    TYPE* temp = nullptr;
+    try
+    {
+        temp = new TYPE[capacity_];
+    }
+    catch (std::bad_alloc& err)
+    {
+        STACK_ASSERTOK(STACK_NO_MEMORY, STACK_NO_MEMORY);
+    }
 
-    void* oldtemp = (char*)data_ - sizeof(can_t);
-    memcpy(temp, (char*)data_ - sizeof(can_t), capacity_ * sizeof(TYPE) / 2 + 2 * sizeof(can_t));
-    free(oldtemp);
+    memcpy(temp, (char*)data_, capacity_ * sizeof(TYPE) / 2);
 
-    data_ = (TYPE*)((char*)temp + sizeof(can_t));
+    delete [] data_;
+    data_ = temp;
 
     fillPoison();
 
     return STACK_OK;
-}
-
-//------------------------------------------------------------------------------
-
-template <typename TYPE>
-size_t Stack<TYPE>::SizeForHash ()
-{
-    assert(this != nullptr);
-
-    size_t size = 0;
-
-#ifdef CANARY_PROTECT
-    size += sizeof(canary1_);
-#endif //CANARY_PROTECT
-
-    size += sizeof(capacity_);
-    size += sizeof(size_cur_);
-    size += sizeof(name_);
-    size += sizeof(data_);
-    size += sizeof(errCode_);
-    size += sizeof(id_);
-
-    return size;
 }
 
 //------------------------------------------------------------------------------
@@ -246,32 +270,25 @@ int Stack<TYPE>::Dump (const char* funcname, const char* logfile)
     const size_t linelen = 80;
     char divline[linelen + 1] = "********************************************************************************";
 
-    FILE* fp = fopen(logfile, "a");
-    if (fp == nullptr)
-        return STACK_NOT_OK;
-
+    FILE* fp = stdout;
     if (funcname != nullptr)
-        fprintf(fp, "This dump was called from a function %s\n", funcname);
-
-    time_t t = time(NULL);
-    struct tm tm = *localtime(&t);
-    fprintf(fp, "TIME: %d-%02d-%02d %02d:%02d:%02d\n\n",
-            tm.tm_year + 1900,
-            tm.tm_mon + 1,
-            tm.tm_mday,
-            tm.tm_hour,
-            tm.tm_min,
-            tm.tm_sec);
-
-    if (this == nullptr)
     {
-        fprintf(fp, "\nStack (ERROR) [0x%p] \"unidentified stack\"\n", this);
-        fprintf(fp, "%s\n", stk_errstr[STACK_NULL_STACK_PTR + 1]);
+        fp = fopen(logfile, "a");
+        if (fp == nullptr)
+            return STACK_NOT_OK;
 
-        fprintf(fp, "%s\n", divline);
-        fclose(fp);
+        if (funcname != nullptr)
+            fprintf(fp, "This dump was called from a function \"%s\"\n", funcname);
 
-        return STACK_OK;
+        time_t t = time(NULL);
+        struct tm tm = *localtime(&t);
+        fprintf(fp, "TIME: %d-%02d-%02d %02d:%02d:%02d\n\n",
+                tm.tm_year + 1900,
+                tm.tm_mon + 1,
+                tm.tm_mday,
+                tm.tm_hour,
+                tm.tm_min,
+                tm.tm_sec);
     }
 
     if ((errCode_ == STACK_NOT_CONSTRUCTED)      ||
@@ -284,20 +301,14 @@ int Stack<TYPE>::Dump (const char* funcname, const char* logfile)
         ErrorPrint(fp);
 
         fprintf(fp, "%s\n", divline);
-        fclose(fp);
+        if (fp != stdout) fclose(fp);
 
         return STACK_OK;
     }
 
     char* StkState = (char*)stk_errstr[STACK_OK + 1];
 
-    if (errCode_)
-    {
-        if ((errCode_ == STACK_CANARY_DIED) || (errCode_ == STACK_INCORRECT_HASH))
-        StkState = (char*)stk_errstr[STACK_NOT_OK + 1];
-
-        ErrorPrint(fp);
-    }
+   if (errCode_) ErrorPrint(fp);
 
     fprintf(fp, "\nStack (%s) [0x%p] \"%s\", id (%d)\n", StkState, this, name_, id_);
     fprintf(fp, "\t{\n");
@@ -306,11 +317,6 @@ int Stack<TYPE>::Dump (const char* funcname, const char* logfile)
 
     fprintf(fp, "\tCapacity           = %u\n",   capacity_);
     fprintf(fp, "\tCurrent size       = %u\n\n", size_cur_);
-
-#ifdef CANARY_PROTECT
-    fprintf(fp, "\tCanary stack 1     = " CAN_PRINT_FORMAT "\n",   canary1_);
-    fprintf(fp, "\tCanary stack 2     = " CAN_PRINT_FORMAT "\n\n", canary2_);
-#endif // CANARY_PROTECT
 
 #ifdef HASH_PROTECT
     fprintf(fp, "\tStack hash         = " HASH_PRINT_FORMAT "\n",   stackhash_);
@@ -326,27 +332,21 @@ int Stack<TYPE>::Dump (const char* funcname, const char* logfile)
     fprintf(fp, "\tData [0x%p]\n", data_);
     fprintf(fp, "\t\t{\n");
 
-#ifdef CANARY_PROTECT
-            fprintf(fp, "\t\tCanary data 1: " CAN_PRINT_FORMAT "\n", ((can_t*)data_)[-1]);
-#endif // CANARY_PROTECT
-
     for (int i = 0; i < capacity_; i++)
     {
-        fprintf(fp, "\t\t*[%d]: ", i);
-        fprintf(fp, PRINT_FORMAT<TYPE>, data_[i]);
-        fprintf(fp, "%s\n", (! isPOISON(data_[i])) ? " (POISON)": "");
-    }
+        char ispois = isPOISON(data_[i]);
 
-#ifdef CANARY_PROTECT
-    fprintf(fp, "\t\tCanary data 2: " CAN_PRINT_FORMAT "\n", ((can_t*)data_)[capacity_ * sizeof(TYPE) / sizeof(can_t)]);
-#endif // CANARY_PROTECT
+        fprintf(fp, "\t\t%s[%d]: ", (ispois) ? " ": "*", i);
+        fprintf(fp, PRINT_FORMAT<TYPE>, data_[i]);
+        fprintf(fp, "%s\n", (ispois) ? " (POISON)": "");
+    }
 
     fprintf(fp, "\t\t}\n");
 
     fprintf(fp, "\t}\n");
 
     fprintf(fp, "%s\n", divline);
-    fclose(fp);
+    if (fp != stdout) fclose(fp);
 
     return STACK_OK;
 }
@@ -354,76 +354,63 @@ int Stack<TYPE>::Dump (const char* funcname, const char* logfile)
 //------------------------------------------------------------------------------
 
 template <typename TYPE>
-int Stack<TYPE>::Check (const char* funcname)
+int Stack<TYPE>::Check ()
 {
     if (this == nullptr)
     {
         return STACK_NULL_STACK_PTR;
     }
 
-    if (errCode_ == STACK_NOT_CONSTRUCTED)
+    else if (errCode_ == STACK_NOT_CONSTRUCTED)
     {
         return STACK_NOT_CONSTRUCTED;
     }
 
-    if (errCode_ == STACK_DESTRUCTED)
+    else if (errCode_ == STACK_DESTRUCTED)
     {
         return STACK_DESTRUCTED;
     }
 
 #ifdef HASH_PROTECT
-    if (stackhash_ != hash(this, SizeForHash()))
+    else if (stackhash_ != hash(this, SizeForHash()))
     {
         errCode_ = STACK_INCORRECT_HASH;
-        return STACK_INCORRECT_HASH;
     }
 #endif // HASH_PROTECT
 
-    if (data_ == nullptr)
+    else if (data_ == nullptr)
     {
         errCode_ = STACK_NULL_DATA_PTR;
-        return STACK_NULL_DATA_PTR;
     }
 
-    if (size_cur_ > capacity_)
+    else if (size_cur_ > capacity_)
     {
         errCode_ = STACK_SIZE_BIGGER_CAPACITY;
-        return STACK_SIZE_BIGGER_CAPACITY;
     }
 
-    if ((capacity_ == 0) || (capacity_ > MAX_CAPACITY))
+    else if ((capacity_ == 0) || (capacity_ > MAX_CAPACITY))
     {
         errCode_ = STACK_CAPACITY_WRONG_VALUE;
-        return STACK_CAPACITY_WRONG_VALUE;
     }
 
-    if (! isPOISON(data_[size_cur_]))
+    else if (! isPOISON(data_[size_cur_]))
     {
         errCode_ = STACK_WRONG_CUR_SIZE;
-        return STACK_WRONG_CUR_SIZE;
     }
-
-#ifdef CANARY_PROTECT
-    if (CanaryCheck())
-    {
-        errCode_ = STACK_CANARY_DIED;
-        return STACK_CANARY_DIED;
-    }
-#endif // CANARY_PROTECT
 
 #ifdef HASH_PROTECT
-    if (datahash_ != hash(data_, capacity_ * sizeof(TYPE)))
+    else if (datahash_ != hash(data_, capacity_ * sizeof(TYPE)))
     {
         errCode_ = STACK_INCORRECT_HASH;
-        return STACK_INCORRECT_HASH;
     }
 #endif // HASH_PROTECT
 
     else
     {
         errCode_ = STACK_OK;
-        return errCode_;
     }
+
+    return errCode_;
 }
 
 //------------------------------------------------------------------------------
@@ -442,7 +429,7 @@ void Stack<TYPE>::ErrorPrint (FILE* fp)
     {
         CONSOLE_PRINT{ printf("%s\n", stk_errstr[errCode_ + 1]); }
 
-        fprintf(fp, "\n%s\n", stk_errstr[errCode_ + 1]);
+        if (fp != stdout) fprintf(fp, "\n%s\n", stk_errstr[errCode_ + 1]);
     }
 }
 
@@ -481,56 +468,24 @@ void Stack<TYPE>::printError (const char* logname, const char* file, int line, c
 
 //------------------------------------------------------------------------------
 
-#ifdef CANARY_PROTECT
+#ifdef HASH_PROTECT
 
 template <typename TYPE>
-can_t Stack<TYPE>::CanaryChange (can_t canary)
-{
-    return (canary * 2 + rand() * ((can_t)rand() % 3 - 1)) % ULLONG_MAX;
-}
-
-#endif // CANARY_PROTECT
-
-//------------------------------------------------------------------------------
-
-#ifdef CANARY_PROTECT
-
-template <typename TYPE>
-void Stack<TYPE>::CanaryPlacing ()
+size_t Stack<TYPE>::SizeForHash ()
 {
     assert(this != nullptr);
 
-    canary1_ = canaries[id_];
-    canary2_ = canaries[id_];
+    size_t size = 0;
 
-    ((can_t*)data_)[-1] = canaries[id_];
-    ((can_t*)data_)[capacity_ * sizeof(TYPE) / sizeof(can_t)] = canaries[id_];
+    size += sizeof(name_);
+    size += sizeof(capacity_);
+    size += sizeof(size_cur_);
+    size += sizeof(data_);
+    size += sizeof(id_);
+
+    return size;
 }
 
-#endif //CANARY_PROTECT
-
-//------------------------------------------------------------------------------
-
-#ifdef CANARY_PROTECT
-
-template <typename TYPE>
-int Stack<TYPE>::CanaryCheck ()
-{
-    if (canary1_ != canaries[id_])
-        return STACK_NOT_OK;
-
-    if (canary2_ != canaries[id_])
-        return STACK_NOT_OK;
-
-    if (((can_t*)data_)[-1] != canaries[id_])
-        return STACK_NOT_OK;
-
-    if (((can_t*)data_)[capacity_ * sizeof(TYPE) / sizeof(can_t)] != canaries[id_])
-        return STACK_NOT_OK;
-
-    return STACK_OK;
-}
-
-#endif //CANARY_PROTECT
+#endif // HASH_PROTECT
 
 //------------------------------------------------------------------------------

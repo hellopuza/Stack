@@ -1,6 +1,6 @@
 /*------------------------------------------------------------------------------
     * File:        main.cpp                                                    *
-    * Description: Program uses safely stack                                   *
+    * Description: Program uses c++ stack                                      *
     * Author:      Artem Puzankov                                              *
     * Email:       puzankov.ao@phystech.edu                                    *
     * GitHub:      https://github.com/hellopuza                                *
@@ -13,21 +13,20 @@
 
 int main()
 {
-    StackConstruct(stk, 8, double);
-    
+    newStack_size(stk, 4, int);
+
+    newStack_size(stk2, 4, int);
+
+
+    stk.Pop();
     stk.Push(10.1);
     stk.Push(-12.2);
+    stk.Pop();
     stk.Push(11.22552e-2);
     stk.Push(-0.4);
-    stk.Push(12);
 
-    printf("%lf\n", stk.Pop());
-    printf("%lf\n", stk.Pop());
-    printf("%lf\n", stk.Pop());
-    printf("%lf\n", stk.Pop());
-    printf("%lf\n", stk.Pop());
-    printf("%lf\n", stk.Pop());
-    printf("%lf\n", stk.Pop());
+    stk2.dCopy(stk);
+    stk2.Dump();
 
 
     return 0;

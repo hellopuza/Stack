@@ -15,10 +15,6 @@
 //#define NDEBUG
 
 
-#if defined(_WIN32)
-    #include <windows.h>
-#endif
-
 #include "StackConfig.h"
 #include <assert.h>
 #include <limits.h>
@@ -27,35 +23,52 @@
 #include <string.h>
 #include <stdio.h>
 #include <time.h>
+#include <new>
 
 #ifdef HASH_PROTECT
 #include "hash.h"
 #endif // HASH_PROTECT
 
 
-#define STACK_CHECK if (Check (__FUNCTION__))                                                                     \
-                    {                                                                                             \
-                      FILE* log = fopen(stack_logname, "a");                                                      \
-                      assert (log != nullptr);                                                                    \
-                      fprintf(log, "ERROR: file %s  line %d  function %s\n\n", __FILE__, __LINE__, __FUNCTION__); \
-                      printf (     "ERROR: file %s  line %d  function %s\n",   __FILE__, __LINE__, __FUNCTION__); \
-                      fclose(log);                                                                                \
-                      Dump( __FUNCTION__, stack_logname);                                                         \
-                      exit(errCode_); /**/                                                                        \
+#if defined (__GNUC__) || defined (__clang__) || defined (__clang_major__)
+    #define __FUNC_NAME__   __PRETTY_FUNCTION__
+
+#elif defined (_MSC_VER)
+    #define __FUNC_NAME__   __FUNCSIG__
+
+#else
+    #define __FUNC_NAME__   __FUNCTION__
+
+#endif
+
+
+#define STACK_CHECK if (Check ())                                                                                      \
+                    {                                                                                                  \
+                      FILE* log = fopen(stack_logname, "a");                                                           \
+                      assert (log != nullptr);                                                                         \
+                      fprintf(log, "ERROR: file %s  line %d  function \"%s\"\n\n", __FILE__, __LINE__, __FUNC_NAME__); \
+                      printf (     "ERROR: file %s  line %d  function \"%s\"\n",   __FILE__, __LINE__, __FUNC_NAME__); \
+                      fclose(log);                                                                                     \
+                      Dump( __FUNC_NAME__, stack_logname);                                                             \
+                      exit(errCode_); /**/                                                                             \
                     }
 
 
-#define STACK_ASSERTOK(cond, err) if (cond)                                                             \
-                                  {                                                                     \
-                                    printError (stack_logname , __FILE__, __LINE__, __FUNCTION__, err); \
-                                    exit(err); /**/                                                     \
+#define STACK_ASSERTOK(cond, err) if (cond)                                                              \
+                                  {                                                                      \
+                                    printError (stack_logname , __FILE__, __LINE__, __FUNC_NAME__, err); \
+                                    exit(err); /**/                                                      \
                                   }
 
+const size_t DEFAULT_STACK_CAPACITY = 8;
 static int   stack_id   = 0;
 static char* stack_name = nullptr;
 
-#define StackConstruct(NAME, capacity, STK_TYPE) \
-        Stack<STK_TYPE> NAME (capacity, (char*)#NAME);
+#define newStack_size(NAME, capacity, STK_TYPE) \
+        Stack<STK_TYPE> NAME ((char*)#NAME, capacity);
+
+#define newStack(NAME, STK_TYPE) \
+        Stack<STK_TYPE> NAME ((char*)#NAME);
 
 
 template <typename TYPE>
@@ -63,27 +76,19 @@ class Stack
 {
 private:
 
-#ifdef CANARY_PROTECT
-    can_t canary1_ = 0;
-#endif //CANARY_PROTECT
-
+    const char* name_ = nullptr;
     size_t  capacity_ = 0;
     size_t  size_cur_ = 0;
-    const char* name_ = nullptr;
 
     TYPE* data_ = nullptr;
 
-    int errCode_;
     int id_ = 0;
+    int errCode_;
 
 #ifdef HASH_PROTECT
     hash_t stackhash_ = 0;
     hash_t datahash_  = 0;
 #endif // HASH_PROTECT
-
-#ifdef CANARY_PROTECT
-    can_t canary2_ = 0;
-#endif //CANARY_PROTECT
 
 public:
 
@@ -96,11 +101,27 @@ public:
 //------------------------------------------------------------------------------
 /*! @brief   Stack constructor.
  *
- *  @param   capacity    Capacity of the stack
  *  @param   stack_name  Stack variable name
+ *  @param   capacity    Capacity of the stack
  */
 
-    Stack (size_t capacity, char* stack_name);
+    Stack (char* stack_name, size_t capacity = DEFAULT_STACK_CAPACITY);
+
+//------------------------------------------------------------------------------
+/*! @brief   Stack copy constructor (deleted).
+ *
+ *  @param   obj         Source stack
+ */
+
+    Stack (const Stack& obj);
+
+//------------------------------------------------------------------------------
+/*! @brief   Stack deep copy constructor.
+ *
+ *  @param   obj         Source stack
+ */
+
+    void dCopy (const Stack& obj);
 
 //------------------------------------------------------------------------------
 /*! @brief   Stack destructor.
@@ -127,6 +148,20 @@ public:
     TYPE Pop ();
 
 //------------------------------------------------------------------------------
+/*! @brief   Get size of the stack data.
+ *
+ *  @return  stack data size
+ */
+
+    size_t getSize() const;
+
+    TYPE& operator [] (size_t n);
+
+    const TYPE& operator [] (size_t n) const;
+
+    Stack& operator = (const Stack& obj); // deleted
+
+//------------------------------------------------------------------------------
 /*! @brief   Print the contents of the stack and its data to the logfile.
  *
  *  @param   funcname    Name of the function from which the StackDump was called
@@ -135,7 +170,7 @@ public:
  *  @return  error code
  */
 
-    int Dump (const char* funcname = "@some function@", const char* logfile = stack_logname);
+    int Dump (const char* funcname = nullptr, const char* logfile = stack_logname);
 
 /*------------------------------------------------------------------------------
                    Private functions                                           *
@@ -158,22 +193,12 @@ private:
     int Expand ();
 
 //------------------------------------------------------------------------------
-/*! @brief   Calculates the size of the structure stack without hash and second canary.
- *
- *  @return  stack size for hash
- */
-
-    size_t SizeForHash ();
-
-//------------------------------------------------------------------------------
 /*! @brief   Check stack for problems, canaries, hash (if enabled).
- *
- *  @param   funcname    Name of the function from which the StackCheck was called
  *
  *  @return  error code
  */
 
-    int Check (const char* funcname);
+    int Check ();
 
 //------------------------------------------------------------------------------
 /*! @brief   Print information and error summary to log file and to console.
@@ -199,40 +224,16 @@ private:
     void printError (const char* logname, const char* file, int line, const char* function, int err);
 
 //------------------------------------------------------------------------------
-/*! @brief   Change canary (if enabled).
+/*! @brief   Calculates the size of the structure stack without hash and second canary.
  *
- *  @param   canary      Canary input
- *
- *  @return  changed canary
+ *  @return  stack size for hash
  */
 
-#ifdef CANARY_PROTECT
+#ifdef HASH_PROTECT
 
-    can_t CanaryChange (can_t canary);
+    size_t SizeForHash ();
 
-#endif // CANARY_PROTECT
-
-//------------------------------------------------------------------------------
-/*! @brief   Placing canaries in stack (if enabled).
- */
-
-#ifdef CANARY_PROTECT
-
-    void CanaryPlacing ();
-
-#endif // CANARY_PROTECT
-
-//------------------------------------------------------------------------------
-/*! @brief   Check stack for canaries (if enabled).
- *
- *  @return  OK if all canaries aren't damaged, otherwise NOT_OK
- */
-
-#ifdef CANARY_PROTECT
-
-    int CanaryCheck ();
-
-#endif // CANARY_PROTECT
+#endif // HASH_PROTECT
 
 //------------------------------------------------------------------------------
 };

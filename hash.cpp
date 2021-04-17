@@ -89,6 +89,7 @@ hash_t hash(void* buf, size_t size)
     assert(buf != nullptr);
 
     size_t bm_size = (size / BLOCK_SIZE) * BLOCK_SIZE + BLOCK_SIZE;
+    size_t mid_size = bm_size / 2;
 
     char* buf_main = (char*)calloc(bm_size, 1);
     if (buf_main == nullptr)
@@ -96,14 +97,14 @@ hash_t hash(void* buf, size_t size)
 
     memcpy(buf_main, buf, size);
 
-    ((size_t*)buf_main)[bm_size/sizeof(size_t) - 1] = size;
+    ((size_t*)buf_main)[bm_size/sizeof(size_t) - 1] += size;
 
-    hash_t hsh1 = (hash_t)(Keys[size % KEYS_NUM]);
+    hash_t hsh = (hash_t)(Keys[size % KEYS_NUM]);
 
-    for (int byte_i = 0; byte_i < bm_size / 2; ++byte_i)
+    for (size_t byte_i = 0; byte_i < mid_size; ++byte_i)
     {
         char b1 = *((char*)buf_main + byte_i);
-        char b2 = *((char*)buf_main + byte_i + bm_size / 2);
+        char b2 = *((char*)buf_main + byte_i + mid_size);
 
         char p1 = b1;
         char p2 = b2;
@@ -115,35 +116,15 @@ hash_t hash(void* buf, size_t size)
         int q2 = b1 ^ p2 ^ Keys[(byte_i + 1) % KEYS_NUM] + b2;
 
         b1 = *((char*)buf_main - 1 - byte_i + bm_size);
-        b2 = *((char*)buf_main - 1 - byte_i + bm_size / 2);
+        b2 = *((char*)buf_main - 1 - byte_i + mid_size);
 
-        hsh1 = hsh1 * (q1*b2 + q2*b1) + hsh1 ^ (q1*b1 + q2*b2) + q1 + q2 + b1 + b2;
+        hsh = hsh * (q1*b2 + q2*b1) + hsh ^ (q1*b1 + q2*b2) + q1 + q2 + b1 + b2;
 
-        bit_rotate(&hsh1, sizeof(hsh1), 3);
+        bit_rotate(&hsh, sizeof(hsh), 3);
     }
     free(buf_main);
 
-
-    hash_t hsh2 = (hash_t)(Keys[size % KEYS_NUM]);
-
-    size_t hs_size = (size / HASH_SIZE) * HASH_SIZE + HASH_SIZE;
-
-    char* hs_main = (char*)calloc(hs_size, 1);
-    if (hs_main == nullptr)
-        return 0;
-
-    memcpy(hs_main, buf, size);
-
-    for (int h = hs_size - HASH_SIZE; h >= 0; --h)
-    {
-        hsh2 = (hsh2 ^ *((char*)hs_main + h)) * (hsh1 ^ *((char*)hs_main + hs_size - 1 - h));
-    }
-    free(hs_main);
-
-
-    hash_t total = hsh1 + hsh2;
-
-    return total;
+    return hsh;
 }
 
 //------------------------------------------------------------------------------
