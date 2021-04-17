@@ -1,18 +1,18 @@
 This dump was called from a function "Stack<TYPE>::Stack(char*, size_t) [with TYPE = int; size_t = long unsigned int]"
-TIME: 2021-04-18 01:29:22
+TIME: 2021-04-18 01:49:32
 
 
-Stack (OK) [0x0x7fff8a81c0a0] "stk", id (0)
+Stack (OK) [0x0x7ffe5f76ad30] "stk", id (0)
 	{
 	Type of data is int
 
 	Capacity           = 4
 	Current size       = 0
 
-	Stack hash         = 0x%016I64X
-	Data hash          = 0x%016I64X
+	Stack hash         = 0x6DD31CB2AD17B1CE
+	Data hash          = 0xFD64858CDEC0D0AF
 
-	Data [0x0x560ae8561eb0]
+	Data [0x0x56522a86eeb0]
 		{
 		 [0]: 2147483647 (POISON)
 		 [1]: 2147483647 (POISON)
@@ -22,20 +22,20 @@ Stack (OK) [0x0x7fff8a81c0a0] "stk", id (0)
 	}
 ********************************************************************************
 This dump was called from a function "Stack<TYPE>::Stack(char*, size_t) [with TYPE = int; size_t = long unsigned int]"
-TIME: 2021-04-18 01:29:22
+TIME: 2021-04-18 01:49:32
 
 
-Stack (OK) [0x0x7fff8a81c0e0] "stk2", id (1)
+Stack (OK) [0x0x7ffe5f76ad70] "stk2", id (1)
 	{
 	Type of data is int
 
 	Capacity           = 4
 	Current size       = 0
 
-	Stack hash         = 0x%016I64X
-	Data hash          = 0x%016I64X
+	Stack hash         = 0x31CB01301B9F68E1
+	Data hash          = 0xFD64858CDEC0D0AF
 
-	Data [0x0x560ae8564520]
+	Data [0x0x56522a871520]
 		{
 		 [0]: 2147483647 (POISON)
 		 [1]: 2147483647 (POISON)
@@ -45,22 +45,22 @@ Stack (OK) [0x0x7fff8a81c0e0] "stk2", id (1)
 	}
 ********************************************************************************
 This dump was called from a function "TYPE Stack<TYPE>::Pop() [with TYPE = int]"
-TIME: 2021-04-18 01:29:22
+TIME: 2021-04-18 01:49:32
 
 
 Stack is empty
 
-Stack (OK) [0x0x7fff8a81c0a0] "stk", id (0)
+Stack (OK) [0x0x7ffe5f76ad30] "stk", id (0)
 	{
 	Type of data is int
 
 	Capacity           = 4
 	Current size       = 0
 
-	Stack hash         = 0x%016I64X
-	Data hash          = 0x%016I64X
+	Stack hash         = 0x6DD31CB2AD17B1CE
+	Data hash          = 0xFD64858CDEC0D0AF
 
-	Data [0x0x560ae8561eb0]
+	Data [0x0x56522a86eeb0]
 		{
 		 [0]: 2147483647 (POISON)
 		 [1]: 2147483647 (POISON)
@@ -70,20 +70,20 @@ Stack (OK) [0x0x7fff8a81c0a0] "stk", id (0)
 	}
 ********************************************************************************
 This dump was called from a function "int Stack<TYPE>::Push(TYPE) [with TYPE = int]"
-TIME: 2021-04-18 01:29:22
+TIME: 2021-04-18 01:49:32
 
 
-Stack (OK) [0x0x7fff8a81c0a0] "stk", id (0)
+Stack (OK) [0x0x7ffe5f76ad30] "stk", id (0)
 	{
 	Type of data is int
 
 	Capacity           = 4
 	Current size       = 1
 
-	Stack hash         = 0x%016I64X
-	Data hash          = 0x%016I64X
+	Stack hash         = 0x039DEBC5BF86F654
+	Data hash          = 0x21D7E61550B18D85
 
-	Data [0x0x560ae8561eb0]
+	Data [0x0x56522a86eeb0]
 		{
 		*[0]: 10
 		 [1]: 2147483647 (POISON)
@@ -93,20 +93,20 @@ Stack (OK) [0x0x7fff8a81c0a0] "stk", id (0)
 	}
 ********************************************************************************
 This dump was called from a function "int Stack<TYPE>::Push(TYPE) [with TYPE = int]"
-TIME: 2021-04-18 01:29:22
+TIME: 2021-04-18 01:49:32
 
 
-Stack (OK) [0x0x7fff8a81c0a0] "stk", id (0)
+Stack (OK) [0x0x7ffe5f76ad30] "stk", id (0)
 	{
 	Type of data is int
 
 	Capacity           = 4
 	Current size       = 2
 
-	Stack hash         = 0x%016I64X
-	Data hash          = 0x%016I64X
+	Stack hash         = 0xD85E62BC1953B2CA
+	Data hash          = 0xA97532210E0A5A68
 
-	Data [0x0x560ae8561eb0]
+	Data [0x0x56522a86eeb0]
 		{
 		*[0]: 10
 		*[1]: -12
@@ -116,20 +116,20 @@ Stack (OK) [0x0x7fff8a81c0a0] "stk", id (0)
 	}
 ********************************************************************************
 This dump was called from a function "TYPE Stack<TYPE>::Pop() [with TYPE = int]"
-TIME: 2021-04-18 01:29:22
+TIME: 2021-04-18 01:49:32
 
 
-Stack (OK) [0x0x7fff8a81c0a0] "stk", id (0)
+Stack (OK) [0x0x7ffe5f76ad30] "stk", id (0)
 	{
 	Type of data is int
 
 	Capacity           = 4
 	Current size       = 1
 
-	Stack hash         = 0x%016I64X
-	Data hash          = 0x%016I64X
+	Stack hash         = 0x039DEBC5BF86F654
+	Data hash          = 0x21D7E61550B18D85
 
-	Data [0x0x560ae8561eb0]
+	Data [0x0x56522a86eeb0]
 		{
 		*[0]: 10
 		 [1]: 2147483647 (POISON)
@@ -139,20 +139,20 @@ Stack (OK) [0x0x7fff8a81c0a0] "stk", id (0)
 	}
 ********************************************************************************
 This dump was called from a function "int Stack<TYPE>::Push(TYPE) [with TYPE = int]"
-TIME: 2021-04-18 01:29:22
+TIME: 2021-04-18 01:49:32
 
 
-Stack (OK) [0x0x7fff8a81c0a0] "stk", id (0)
+Stack (OK) [0x0x7ffe5f76ad30] "stk", id (0)
 	{
 	Type of data is int
 
 	Capacity           = 4
 	Current size       = 2
 
-	Stack hash         = 0x%016I64X
-	Data hash          = 0x%016I64X
+	Stack hash         = 0xD85E62BC1953B2CA
+	Data hash          = 0x4B367CD79A9AF770
 
-	Data [0x0x560ae8561eb0]
+	Data [0x0x56522a86eeb0]
 		{
 		*[0]: 10
 		*[1]: 0
@@ -162,20 +162,20 @@ Stack (OK) [0x0x7fff8a81c0a0] "stk", id (0)
 	}
 ********************************************************************************
 This dump was called from a function "int Stack<TYPE>::Push(TYPE) [with TYPE = int]"
-TIME: 2021-04-18 01:29:22
+TIME: 2021-04-18 01:49:32
 
 
-Stack (OK) [0x0x7fff8a81c0a0] "stk", id (0)
+Stack (OK) [0x0x7ffe5f76ad30] "stk", id (0)
 	{
 	Type of data is int
 
 	Capacity           = 4
 	Current size       = 3
 
-	Stack hash         = 0x%016I64X
-	Data hash          = 0x%016I64X
+	Stack hash         = 0xCF589D6CF8F3098B
+	Data hash          = 0xE34AA94CD23F4028
 
-	Data [0x0x560ae8561eb0]
+	Data [0x0x56522a86eeb0]
 		{
 		*[0]: 10
 		*[1]: 0
@@ -185,20 +185,20 @@ Stack (OK) [0x0x7fff8a81c0a0] "stk", id (0)
 	}
 ********************************************************************************
 This dump was called from a function "void Stack<TYPE>::dCopy(const Stack<TYPE>&) [with TYPE = int]"
-TIME: 2021-04-18 01:29:22
+TIME: 2021-04-18 01:49:32
 
 
-Stack (OK) [0x0x7fff8a81c0e0] "stk2", id (1)
+Stack (OK) [0x0x7ffe5f76ad70] "stk2", id (1)
 	{
 	Type of data is int
 
 	Capacity           = 4
 	Current size       = 3
 
-	Stack hash         = 0x%016I64X
-	Data hash          = 0x%016I64X
+	Stack hash         = 0x534E1DBB2BC5C41A
+	Data hash          = 0xE34AA94CD23F4028
 
-	Data [0x0x560ae8564630]
+	Data [0x0x56522a871630]
 		{
 		*[0]: 10
 		*[1]: 0
@@ -208,20 +208,20 @@ Stack (OK) [0x0x7fff8a81c0e0] "stk2", id (1)
 	}
 ********************************************************************************
 This dump was called from a function "Stack<TYPE>::~Stack() [with TYPE = int]"
-TIME: 2021-04-18 01:29:22
+TIME: 2021-04-18 01:49:32
 
 
-Stack (OK) [0x0x7fff8a81c0e0] "stk2", id (1)
+Stack (OK) [0x0x7ffe5f76ad70] "stk2", id (1)
 	{
 	Type of data is int
 
 	Capacity           = 4
 	Current size       = 3
 
-	Stack hash         = 0x%016I64X
-	Data hash          = 0x%016I64X
+	Stack hash         = 0x534E1DBB2BC5C41A
+	Data hash          = 0xE34AA94CD23F4028
 
-	Data [0x0x560ae8564630]
+	Data [0x0x56522a871630]
 		{
 		*[0]: 10
 		*[1]: 0
@@ -231,20 +231,20 @@ Stack (OK) [0x0x7fff8a81c0e0] "stk2", id (1)
 	}
 ********************************************************************************
 This dump was called from a function "Stack<TYPE>::~Stack() [with TYPE = int]"
-TIME: 2021-04-18 01:29:22
+TIME: 2021-04-18 01:49:32
 
 
-Stack (OK) [0x0x7fff8a81c0a0] "stk", id (0)
+Stack (OK) [0x0x7ffe5f76ad30] "stk", id (0)
 	{
 	Type of data is int
 
 	Capacity           = 4
 	Current size       = 3
 
-	Stack hash         = 0x%016I64X
-	Data hash          = 0x%016I64X
+	Stack hash         = 0xCF589D6CF8F3098B
+	Data hash          = 0xE34AA94CD23F4028
 
-	Data [0x0x560ae8561eb0]
+	Data [0x0x56522a86eeb0]
 		{
 		*[0]: 10
 		*[1]: 0

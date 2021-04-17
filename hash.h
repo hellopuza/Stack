@@ -28,7 +28,7 @@ typedef unsigned long long hash_t;
 #define HASH_SIZE sizeof(hash_t)
 #define MAX_HASH  ULLONG_MAX
 
-#define HASH_PRINT_FORMAT "0x%016I64X"
+#define HASH_PRINT_FORMAT "0x%016llX"
 
 static const size_t BLOCK_SIZE = 64;
 static const size_t KEYS_NUM   = 16;
