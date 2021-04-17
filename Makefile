@@ -3,7 +3,6 @@
 CC = g++
 CFLAGS = -c -O3
 LDFLAGS =
-LIBS = -lsfml-system -lsfml-graphics -lsfml-window
 SOURCES = main.cpp hash.cpp
 OBJECTS = $(SOURCES:.cpp=.o)
 EXECUTABLE = Stack
