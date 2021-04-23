@@ -9,7 +9,7 @@
 
 #define _CRT_SECURE_NO_WARNINGS
 
-#include "Stack.h"
+#include "StackLib/Stack.h"
 
 int main()
 {
