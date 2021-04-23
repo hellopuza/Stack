@@ -3,7 +3,7 @@
 CC = g++
 CFLAGS = -c -O3
 LDFLAGS =
-SOURCES = main.cpp hash.cpp
+SOURCES = main.cpp StackLib/hash.cpp
 OBJECTS = $(SOURCES:.cpp=.o)
 EXECUTABLE = Stack
 
