@@ -1,255 +1,230 @@
-This dump was called from a function "Stack<TYPE>::Stack(char*, size_t) [with TYPE = int; size_t = long unsigned int]"
-TIME: 2021-04-18 01:49:32
+This dump was called from a function "__thiscall Stack<double>::Stack(char *,unsigned int)"
+TIME: 2021-05-02 00:39:44
 
 
-Stack (OK) [0x0x7ffe5f76ad30] "stk", id (0)
+Stack (OK) [0x00D9FB2C] "stk", id (0)
 	{
-	Type of data is int
+	Type of data is double
 
 	Capacity           = 4
 	Current size       = 0
 
-	Stack hash         = 0x6DD31CB2AD17B1CE
-	Data hash          = 0xFD64858CDEC0D0AF
+	Stack hash         = 0xCA8B64AF2910025E
+	Data hash          = 0x606D3CF119142CEC
 
-	Data [0x0x56522a86eeb0]
+	Data [0x01277F90]
 		{
-		 [0]: 2147483647 (POISON)
-		 [1]: 2147483647 (POISON)
-		 [2]: 2147483647 (POISON)
-		 [3]: 2147483647 (POISON)
+		 [0]: -nan(ind) (POISON)
+		 [1]: -nan(ind) (POISON)
+		 [2]: -nan(ind) (POISON)
+		 [3]: -nan(ind) (POISON)
 		}
 	}
 ********************************************************************************
-This dump was called from a function "Stack<TYPE>::Stack(char*, size_t) [with TYPE = int; size_t = long unsigned int]"
-TIME: 2021-04-18 01:49:32
+This dump was called from a function "__thiscall Stack<double>::Stack(char *,unsigned int)"
+TIME: 2021-05-02 00:39:44
 
 
-Stack (OK) [0x0x7ffe5f76ad70] "stk2", id (1)
+Stack (OK) [0x00D9FAFC] "stk2", id (1)
 	{
-	Type of data is int
+	Type of data is double
 
 	Capacity           = 4
 	Current size       = 0
 
-	Stack hash         = 0x31CB01301B9F68E1
-	Data hash          = 0xFD64858CDEC0D0AF
+	Stack hash         = 0x3397D4F960FFF3F7
+	Data hash          = 0x606D3CF119142CEC
 
-	Data [0x0x56522a871520]
+	Data [0x012812B8]
 		{
-		 [0]: 2147483647 (POISON)
-		 [1]: 2147483647 (POISON)
-		 [2]: 2147483647 (POISON)
-		 [3]: 2147483647 (POISON)
+		 [0]: -nan(ind) (POISON)
+		 [1]: -nan(ind) (POISON)
+		 [2]: -nan(ind) (POISON)
+		 [3]: -nan(ind) (POISON)
 		}
 	}
 ********************************************************************************
-This dump was called from a function "TYPE Stack<TYPE>::Pop() [with TYPE = int]"
-TIME: 2021-04-18 01:49:32
+This dump was called from a function "int __thiscall Stack<double>::Push(double)"
+TIME: 2021-05-02 00:39:44
 
 
-Stack is empty
-
-Stack (OK) [0x0x7ffe5f76ad30] "stk", id (0)
+Stack (OK) [0x00D9FB2C] "stk", id (0)
 	{
-	Type of data is int
-
-	Capacity           = 4
-	Current size       = 0
-
-	Stack hash         = 0x6DD31CB2AD17B1CE
-	Data hash          = 0xFD64858CDEC0D0AF
-
-	Data [0x0x56522a86eeb0]
-		{
-		 [0]: 2147483647 (POISON)
-		 [1]: 2147483647 (POISON)
-		 [2]: 2147483647 (POISON)
-		 [3]: 2147483647 (POISON)
-		}
-	}
-********************************************************************************
-This dump was called from a function "int Stack<TYPE>::Push(TYPE) [with TYPE = int]"
-TIME: 2021-04-18 01:49:32
-
-
-Stack (OK) [0x0x7ffe5f76ad30] "stk", id (0)
-	{
-	Type of data is int
+	Type of data is double
 
 	Capacity           = 4
 	Current size       = 1
 
-	Stack hash         = 0x039DEBC5BF86F654
-	Data hash          = 0x21D7E61550B18D85
+	Stack hash         = 0x5A2FF0480144FDE6
+	Data hash          = 0xFFD6F9234AA13883
 
-	Data [0x0x56522a86eeb0]
+	Data [0x01277F90]
 		{
-		*[0]: 10
-		 [1]: 2147483647 (POISON)
-		 [2]: 2147483647 (POISON)
-		 [3]: 2147483647 (POISON)
+		*[0]: 10.100000
+		 [1]: -nan(ind) (POISON)
+		 [2]: -nan(ind) (POISON)
+		 [3]: -nan(ind) (POISON)
 		}
 	}
 ********************************************************************************
-This dump was called from a function "int Stack<TYPE>::Push(TYPE) [with TYPE = int]"
-TIME: 2021-04-18 01:49:32
+This dump was called from a function "int __thiscall Stack<double>::Push(double)"
+TIME: 2021-05-02 00:39:44
 
 
-Stack (OK) [0x0x7ffe5f76ad30] "stk", id (0)
+Stack (OK) [0x00D9FB2C] "stk", id (0)
 	{
-	Type of data is int
+	Type of data is double
 
 	Capacity           = 4
 	Current size       = 2
 
-	Stack hash         = 0xD85E62BC1953B2CA
-	Data hash          = 0xA97532210E0A5A68
+	Stack hash         = 0x4E841FBF6785390D
+	Data hash          = 0x8D81DFF01E15A2B5
 
-	Data [0x0x56522a86eeb0]
+	Data [0x01277F90]
 		{
-		*[0]: 10
-		*[1]: -12
-		 [2]: 2147483647 (POISON)
-		 [3]: 2147483647 (POISON)
+		*[0]: 10.100000
+		*[1]: -12.200000
+		 [2]: -nan(ind) (POISON)
+		 [3]: -nan(ind) (POISON)
 		}
 	}
 ********************************************************************************
-This dump was called from a function "TYPE Stack<TYPE>::Pop() [with TYPE = int]"
-TIME: 2021-04-18 01:49:32
+This dump was called from a function "double __thiscall Stack<double>::Pop(void)"
+TIME: 2021-05-02 00:39:44
 
 
-Stack (OK) [0x0x7ffe5f76ad30] "stk", id (0)
+Stack (OK) [0x00D9FB2C] "stk", id (0)
 	{
-	Type of data is int
+	Type of data is double
 
 	Capacity           = 4
 	Current size       = 1
 
-	Stack hash         = 0x039DEBC5BF86F654
-	Data hash          = 0x21D7E61550B18D85
+	Stack hash         = 0x5A2FF0480144FDE6
+	Data hash          = 0xFFD6F9234AA13883
 
-	Data [0x0x56522a86eeb0]
+	Data [0x01277F90]
 		{
-		*[0]: 10
-		 [1]: 2147483647 (POISON)
-		 [2]: 2147483647 (POISON)
-		 [3]: 2147483647 (POISON)
+		*[0]: 10.100000
+		 [1]: -nan(ind) (POISON)
+		 [2]: -nan(ind) (POISON)
+		 [3]: -nan(ind) (POISON)
 		}
 	}
 ********************************************************************************
-This dump was called from a function "int Stack<TYPE>::Push(TYPE) [with TYPE = int]"
-TIME: 2021-04-18 01:49:32
+This dump was called from a function "int __thiscall Stack<double>::Push(double)"
+TIME: 2021-05-02 00:39:44
 
 
-Stack (OK) [0x0x7ffe5f76ad30] "stk", id (0)
+Stack (OK) [0x00D9FB2C] "stk", id (0)
 	{
-	Type of data is int
+	Type of data is double
 
 	Capacity           = 4
 	Current size       = 2
 
-	Stack hash         = 0xD85E62BC1953B2CA
-	Data hash          = 0x4B367CD79A9AF770
+	Stack hash         = 0x4E841FBF6785390D
+	Data hash          = 0x18875424EA4490E2
 
-	Data [0x0x56522a86eeb0]
+	Data [0x01277F90]
 		{
-		*[0]: 10
-		*[1]: 0
-		 [2]: 2147483647 (POISON)
-		 [3]: 2147483647 (POISON)
+		*[0]: 10.100000
+		*[1]: 0.112255
+		 [2]: -nan(ind) (POISON)
+		 [3]: -nan(ind) (POISON)
 		}
 	}
 ********************************************************************************
-This dump was called from a function "int Stack<TYPE>::Push(TYPE) [with TYPE = int]"
-TIME: 2021-04-18 01:49:32
+This dump was called from a function "int __thiscall Stack<double>::Push(double)"
+TIME: 2021-05-02 00:39:44
 
 
-Stack (OK) [0x0x7ffe5f76ad30] "stk", id (0)
+Stack (OK) [0x00D9FB2C] "stk", id (0)
 	{
-	Type of data is int
+	Type of data is double
 
 	Capacity           = 4
 	Current size       = 3
 
-	Stack hash         = 0xCF589D6CF8F3098B
-	Data hash          = 0xE34AA94CD23F4028
+	Stack hash         = 0x71AD959DA825322D
+	Data hash          = 0x6A1AD2CEC27A8208
 
-	Data [0x0x56522a86eeb0]
+	Data [0x01277F90]
 		{
-		*[0]: 10
-		*[1]: 0
-		*[2]: 0
-		 [3]: 2147483647 (POISON)
+		*[0]: 10.100000
+		*[1]: 0.112255
+		*[2]: -0.400000
+		 [3]: -nan(ind) (POISON)
 		}
 	}
 ********************************************************************************
-This dump was called from a function "void Stack<TYPE>::dCopy(const Stack<TYPE>&) [with TYPE = int]"
-TIME: 2021-04-18 01:49:32
+This dump was called from a function "void __thiscall Stack<double>::dCopy(const class Stack<double> &)"
+TIME: 2021-05-02 00:39:44
 
 
-Stack (OK) [0x0x7ffe5f76ad70] "stk2", id (1)
+Stack (OK) [0x00D9FAFC] "stk2", id (1)
 	{
-	Type of data is int
+	Type of data is double
 
 	Capacity           = 4
 	Current size       = 3
 
-	Stack hash         = 0x534E1DBB2BC5C41A
-	Data hash          = 0xE34AA94CD23F4028
+	Stack hash         = 0x4A7EE4CFC34F2484
+	Data hash          = 0x6A1AD2CEC27A8208
 
-	Data [0x0x56522a871630]
+	Data [0x012824C8]
 		{
-		*[0]: 10
-		*[1]: 0
-		*[2]: 0
-		 [3]: 2147483647 (POISON)
+		*[0]: 10.100000
+		*[1]: 0.112255
+		*[2]: -0.400000
+		 [3]: -nan(ind) (POISON)
 		}
 	}
 ********************************************************************************
-This dump was called from a function "Stack<TYPE>::~Stack() [with TYPE = int]"
-TIME: 2021-04-18 01:49:32
+This dump was called from a function "__thiscall Stack<double>::~Stack(void)"
+TIME: 2021-05-02 00:39:44
 
 
-Stack (OK) [0x0x7ffe5f76ad70] "stk2", id (1)
+Stack (OK) [0x00D9FAFC] "stk2", id (1)
 	{
-	Type of data is int
+	Type of data is double
 
 	Capacity           = 4
 	Current size       = 3
 
-	Stack hash         = 0x534E1DBB2BC5C41A
-	Data hash          = 0xE34AA94CD23F4028
+	Stack hash         = 0x4A7EE4CFC34F2484
+	Data hash          = 0x6A1AD2CEC27A8208
 
-	Data [0x0x56522a871630]
+	Data [0x012824C8]
 		{
-		*[0]: 10
-		*[1]: 0
-		*[2]: 0
-		 [3]: 2147483647 (POISON)
+		*[0]: 10.100000
+		*[1]: 0.112255
+		*[2]: -0.400000
+		 [3]: -nan(ind) (POISON)
 		}
 	}
 ********************************************************************************
-This dump was called from a function "Stack<TYPE>::~Stack() [with TYPE = int]"
-TIME: 2021-04-18 01:49:32
+This dump was called from a function "__thiscall Stack<double>::~Stack(void)"
+TIME: 2021-05-02 00:39:44
 
 
-Stack (OK) [0x0x7ffe5f76ad30] "stk", id (0)
+Stack (OK) [0x00D9FB2C] "stk", id (0)
 	{
-	Type of data is int
+	Type of data is double
 
 	Capacity           = 4
 	Current size       = 3
 
-	Stack hash         = 0xCF589D6CF8F3098B
-	Data hash          = 0xE34AA94CD23F4028
+	Stack hash         = 0x71AD959DA825322D
+	Data hash          = 0x6A1AD2CEC27A8208
 
-	Data [0x0x56522a86eeb0]
+	Data [0x01277F90]
 		{
-		*[0]: 10
-		*[1]: 0
-		*[2]: 0
-		 [3]: 2147483647 (POISON)
+		*[0]: 10.100000
+		*[1]: 0.112255
+		*[2]: -0.400000
+		 [3]: -nan(ind) (POISON)
 		}
 	}
 ********************************************************************************

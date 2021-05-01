@@ -13,12 +13,11 @@
 
 int main()
 {
-    newStack_size(stk, 4, int);
+    newStack_size(stk, 4, double);
 
-    newStack_size(stk2, 4, int);
+    newStack_size(stk2, 4, double);
 
 
-    stk.Pop();
     stk.Push(10.1);
     stk.Push(-12.2);
     stk.Pop();
@@ -27,7 +26,6 @@ int main()
 
     stk2.dCopy(stk);
     stk2.Dump();
-
 
     return 0;
 }

@@ -1,8 +1,11 @@
-#include <limits.h>
-#include <math.h>
-
 #ifndef TYPES_H
 #define TYPES_H
+
+#include <type_traits>
+#include <limits.h>
+#include <string.h>
+#include <math.h>
+
 
     template<typename TYPE> const TYPE POISON;
 
@@ -54,8 +57,26 @@
                 return 0;
 
         return (value == POISON<TYPE>);
+    }
 
 //------------------------------------------------------------------------------
-}
+/*! @brief   Ñopy the contents of one variable to another.
+ *
+ *  @param   dst         Destination variable
+ *  @param   src         Source variable
+ */
+
+    template <typename TYPE>
+    void copyType (TYPE& dst, TYPE& src)
+    {
+        if constexpr (std::is_same<TYPE, char*>::value)
+            strcpy(dst, src);
+        else
+            dst = src;
+    }
+
+//------------------------------------------------------------------------------
+
+
 
 #endif // TYPES_H
