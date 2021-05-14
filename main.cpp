@@ -14,9 +14,7 @@
 int main()
 {
     newStack_size(stk, 4, double);
-
     newStack_size(stk2, 4, double);
-
 
     stk.Push(10.1);
     stk.Push(-12.2);
@@ -24,7 +22,8 @@ int main()
     stk.Push(11.22552e-2);
     stk.Push(-0.4);
 
-    stk2.dCopy(stk);
+    //Stack<double> stk2 = stk;
+    stk2 = stk;
     stk2.Dump();
 
     return 0;
